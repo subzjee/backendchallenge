@@ -47,10 +47,11 @@ var router = express.Router();
 Create new ingredient.
 */
 router.post("/api/ingredients", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var ingredient;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var ingredient, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
+                _b.trys.push([0, 2, , 3]);
                 ingredient = new Ingredient({
                     name: req.body.name,
                     nutritional_vals: req.body.nutritional_vals,
@@ -59,11 +60,16 @@ router.post("/api/ingredients", authenticate_1.default, function (req, res) { re
                 });
                 return [4 /*yield*/, ingredient.save()];
             case 1:
-                _a.sent();
+                _b.sent();
                 res.status(201);
                 res.location("/api/ingredients/" + ingredient._id);
                 res.send(ingredient);
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                _a = _b.sent();
+                res.sendStatus(400);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); });

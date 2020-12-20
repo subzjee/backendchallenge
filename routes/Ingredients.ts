@@ -11,17 +11,21 @@ const router = express.Router();
 Create new ingredient.
 */
 router.post("/api/ingredients", authenticate, async (req: Request, res: Response) => {
-    const ingredient: Document = new Ingredient({
-        name: req.body.name,
-        nutritional_vals: req.body.nutritional_vals,
-        calories: req.body.calories,
-        user_id: req.body.user_id
-    });
-
-    await ingredient.save();
-    res.status(201);
-    res.location(`/api/ingredients/${ingredient._id}`);
-    res.send(ingredient);
+    try {
+        const ingredient: Document = new Ingredient({
+            name: req.body.name,
+            nutritional_vals: req.body.nutritional_vals,
+            calories: req.body.calories,
+            user_id: req.body.user_id
+        });
+    
+        await ingredient.save();
+        res.status(201);
+        res.location(`/api/ingredients/${ingredient._id}`);
+        res.send(ingredient);
+    } catch {
+        res.sendStatus(400);
+    }
 })
 
 /*
