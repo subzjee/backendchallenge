@@ -10,6 +10,9 @@ interface DecodedToken {
     user_id: string
 }
 
+/*
+Middleware to provide JWT authentication.
+*/
 export default function authenticate(req: Request, res: Response, next: any) {
     if (req.headers.authorization) {
         const [ prefix, token, ...rest ] = req.headers.authorization.split(' ');

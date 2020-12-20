@@ -54,7 +54,6 @@ router.post("/api/ingredients", authenticate_1.default, function (req, res) { re
                     calories: req.body.calories,
                     user_id: req.body.user.user_id
                 });
-                console.log(ingredient);
                 return [4 /*yield*/, ingredient.save()];
             case 1:
                 _a.sent();
@@ -130,7 +129,6 @@ router.patch("/api/ingredients/:id", authenticate_1.default, function (req, res)
                 if (req.body.calories) {
                     ingredient.calories = req.body.calories;
                 }
-                console.log(ingredient);
                 return [4 /*yield*/, ingredient.save()];
             case 3:
                 _c.sent();

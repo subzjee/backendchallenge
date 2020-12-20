@@ -23,3 +23,5 @@ const ingredientSchema = mongoose.Schema({
 })
 
 module.exports = mongoose.model("Ingredient", ingredientSchema);
+
+export {}
