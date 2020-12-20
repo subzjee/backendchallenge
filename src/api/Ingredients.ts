@@ -2,6 +2,7 @@ const express = require('express');
 import { Request, Response } from 'express';
 import { Document } from 'mongoose';
 import authenticate from '../middleware/authenticate';
+import { validatePatch, validatePost } from '../middleware/validateIngredient';
 
 const Ingredient = require('../models/Ingredient');
 
@@ -10,7 +11,7 @@ const router = express.Router();
 /*
 Create new ingredient.
 */
-router.post("/api/ingredients", authenticate, async (req: Request, res: Response) => {
+router.post("/api/ingredients", authenticate, validatePost, async (req: Request, res: Response) => {
     try {
         const ingredient: Document = new Ingredient({
             name: req.body.name,
@@ -62,7 +63,7 @@ router.get("/api/ingredients/:id", authenticate, async (req: Request, res: Respo
 Update existing ingredient through resource ID param.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
-router.patch("/api/ingredients/:id", authenticate, async (req: Request, res: Response) => {
+router.patch("/api/ingredients/:id", authenticate, validatePatch, async (req: Request, res: Response) => {
     const userId: string = req.body.user_id;
 
     try {
