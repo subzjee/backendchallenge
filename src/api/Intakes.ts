@@ -73,15 +73,6 @@ router.patch("/api/intakes/:id", authenticate, validatePatch, async (req: Reques
             }
     
             if (req.body.meal_id) {                
-                const found = await Meal.findOne({_id: req.body.meal_id});
-
-                // Check if meal exists.
-                if (!found) {
-                    res.status(400);
-                    res.send("Meal ID is invalid");
-                    return;
-                }
-
                 intake.meal_id = req.body.meal_id;
             }
     

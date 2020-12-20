@@ -6,7 +6,7 @@ const User = require('../models/User');
 /*
 Middleware to validate parameters for registration.
 */
-export default async function validateRegister(req: Request,
+export default async function validateLogin(req: Request,
                                      res: Response, next: NextFunction) {
     const user = await User.findOne({username: req.body.username});
 
