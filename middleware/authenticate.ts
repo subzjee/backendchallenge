@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-import {Request, Response, NextFunction} from 'express';
-import {DecodedToken} from '../interfaces';
+import { Request, Response, NextFunction } from 'express';
+import { DecodedToken } from '../interfaces';
 
 require('dotenv').config();
 

@@ -3,6 +3,12 @@ interface DecodedToken {
     user_id: string
 }
 
+interface LoginInfo {
+    username: string,
+    password: string
+}
+
 export {
-    DecodedToken
+    DecodedToken,
+    LoginInfo
 }

@@ -1,6 +1,6 @@
 const express = require('express');
 import { Request, Response, Router } from 'express';
-import { DecodedToken } from '../interfaces';
+import { Document } from 'mongoose';
 import authenticate from '../middleware/authenticate';
 
 const Meal = require('../models/Meal');
@@ -24,7 +24,7 @@ router.post("/api/meals", authenticate, async (req: Request, res: Response) => {
         }
     }
 
-    const meal = new Meal({
+    const meal: Document = new Meal({
         name: req.body.name,
         ingredients: req.body.ingredients,
         user_id: req.body.user_id
@@ -41,10 +41,10 @@ router.post("/api/meals", authenticate, async (req: Request, res: Response) => {
 Get all meals by user ID.
 */
 router.get("/api/meals", authenticate, async (req: Request, res: Response) => {
-    const userId = req.body.user_id;
+    const userId: string = req.body.user_id;
 
     try {
-        const meals = await Meal.find({ user_id: userId });
+        const meals: Array<object> = await Meal.find({ user_id: userId });
         res.send(meals);
     } catch {
         res.sendStatus(404);
@@ -56,7 +56,7 @@ Get specific meal by resource ID.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.get("/api/meals/:id", authenticate, async (req: Request, res: Response) => {
-    const userId = req.body.user_id;
+    const userId: string = req.body.user_id;
 
     try {
         const meal = await Meal.findOne({ _id: req.params.id });
@@ -76,7 +76,7 @@ Update existing meal through resource ID param.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.patch("/api/meals/:id", authenticate, async (req: Request, res: Response) => {
-    const userId = req.body.user_id;
+    const userId: string = req.body.user_id;
 
     try {
         const meal = await Meal.findOne({ _id: req.params.id });
@@ -116,7 +116,7 @@ Delete specific meal, as indicated by resource ID param.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.delete("/api/meals/:id", authenticate, async (req: Request, res: Response) => {
-    const userId = req.body.user_id;
+    const userId: string = req.body.user_id;
 
     try {
         const meal = await Meal.findOne({ _id: req.params.id });

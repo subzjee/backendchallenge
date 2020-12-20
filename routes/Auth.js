@@ -69,7 +69,7 @@ router.post('/api/register', function (req, res) { return __awaiter(void 0, void
                 user_1 = new User({
                     username: req.body.username,
                     password: password,
-                    userId: userId,
+                    user_id: userId,
                 });
                 return [4 /*yield*/, user_1.save()];
             case 3:

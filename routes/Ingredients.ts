@@ -1,6 +1,6 @@
 const express = require('express');
 import { Request, Response } from 'express';
-import { DecodedToken } from '../interfaces';
+import { Document } from 'mongoose';
 import authenticate from '../middleware/authenticate';
 
 const Ingredient = require('../models/Ingredient');
@@ -11,7 +11,7 @@ const router = express.Router();
 Create new ingredient.
 */
 router.post("/api/ingredients", authenticate, async (req: Request, res: Response) => {
-    const ingredient = new Ingredient({
+    const ingredient: Document = new Ingredient({
         name: req.body.name,
         nutritional_vals: req.body.nutritional_vals,
         calories: req.body.calories,
@@ -28,10 +28,10 @@ router.post("/api/ingredients", authenticate, async (req: Request, res: Response
 Get all ingredients by user ID.
 */
 router.get("/api/ingredients", authenticate, async (req: Request, res: Response) => {
-    const userId = req.body.user_id;
+    const userId: string = req.body.user_id;
 
     try {
-        let ingredients = await Ingredient.find({ user_id: userId });
+        let ingredients: Array<object> = await Ingredient.find({ user_id: userId });
         res.send(ingredients);
     } catch {
         res.sendStatus(404);
@@ -43,7 +43,7 @@ Get a specific ingredient by resource ID.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.get("/api/ingredients/:id", authenticate, async (req: Request, res: Response) => {
-    const userId = req.body.user_id;
+    const userId: string = req.body.user_id;
 
     try {
         const ingredient = await Ingredient.findOne({ _id: req.params.id });
@@ -63,7 +63,7 @@ Update existing ingredient through resource ID param.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.patch("/api/ingredients/:id", authenticate, async (req: Request, res: Response) => {
-    const userId = req.body.user_id;
+    const userId: string = req.body.user_id;
 
     try {
         const ingredient = await Ingredient.findOne({ _id: req.params.id });
@@ -96,7 +96,7 @@ Delete specific ingredient, as indicated by resource ID param.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.delete("/api/ingredients/:id", authenticate, async (req: Request, res: Response) => {
-    const userId = req.body.user_id;
+    const userId: string = req.body.user_id;
 
     try {
         const ingredient = await Ingredient.findOne({ _id: req.params.id });

@@ -1,5 +1,6 @@
 const express = require('express');
-import {Request, Response, Router} from 'express';
+import { Request, Response, Router } from 'express';
+import { Document, Model, Schema } from 'mongoose';
 import authenticate from '../middleware/authenticate';
 
 const Intake = require('../models/Intake');
@@ -20,7 +21,7 @@ router.post("/api/intakes", authenticate, async (req: Request, res: Response) =>
         return;
     }
 
-    const intake = new Intake({
+    const intake: Document = new Intake({
         dateTime: req.body.time,
         meal_id: req.body.meal_id,
         amount: req.body.amount,
@@ -37,10 +38,10 @@ router.post("/api/intakes", authenticate, async (req: Request, res: Response) =>
 Get all intakes by user ID.
 */
 router.get("/api/intakes", authenticate, async (req: Request, res: Response) => {
-    const userId = req.body.user_id;
+    const userId: string = req.body.user_id;
 
     try {
-        let intakes = await Intake.find({ user_id: userId });
+        let intakes: Array<object> = await Intake.find({ user_id: userId });
         res.send(intakes);
     } catch {
         res.sendStatus(404);
@@ -52,7 +53,7 @@ Get a specific intake by resource ID.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.get("/api/intakes/:id", authenticate, async (req: Request, res: Response) => {
-    const userId = req.body.user_id;
+    const userId: string = req.body.user_id;
 
     try {
         const intake = await Intake.findOne({ _id: req.params.id });
@@ -73,7 +74,7 @@ Update existing intake through resource ID param.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.patch("/api/intakes/:id", authenticate, async (req: Request, res: Response) => {
-    const userId = req.body.user_id;
+    const userId: string = req.body.user_id;
 
     try {
         const intake = await Intake.findOne({ _id: req.params.id });
@@ -116,7 +117,7 @@ Delete specific intake, as indicated by resource ID param.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.delete("/api/intakes/:id", authenticate, async (req: Request, res: Response) => {
-    const userId = req.body.user_id;
+    const userId: string = req.body.user_id;
 
     try {
         const intake = await Intake.findOne({ _id: req.params.id });
