@@ -4,11 +4,12 @@ import { DecodedToken } from '../interfaces';
 import authenticate from '../middleware/authenticate';
 
 const Intake = require('../models/Intake');
+const Meal = require('../models/Meal');
 
 const router: Router = express.Router();
 
 router.post("/api/intakes", authenticate, async (req: Request, res: Response) => {
-    const found = await Intake.find({ _id : req.body.meal_id });
+    const found = await Meal.find({ _id : req.body.meal_id });
 
     if (found.length === 0) {
         res.status(400);

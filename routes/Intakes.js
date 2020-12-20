@@ -42,12 +42,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express = require('express');
 var authenticate_1 = __importDefault(require("../middleware/authenticate"));
 var Intake = require('../models/Intake');
+var Meal = require('../models/Meal');
 var router = express.Router();
 router.post("/api/intakes", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var found, intake;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, Intake.find({ _id: req.body.meal_id })];
+            case 0: return [4 /*yield*/, Meal.find({ _id: req.body.meal_id })];
             case 1:
                 found = _a.sent();
                 if (found.length === 0) {

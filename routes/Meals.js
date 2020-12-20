@@ -42,6 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express = require('express');
 var authenticate_1 = __importDefault(require("../middleware/authenticate"));
 var Meal = require('../models/Meal');
+var Ingredient = require('../models/Ingredient');
 var router = express.Router();
 router.post("/api/meals", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _i, _a, ingredient, found, meal;
@@ -53,12 +54,12 @@ router.post("/api/meals", authenticate_1.default, function (req, res) { return _
             case 1:
                 if (!(_i < _a.length)) return [3 /*break*/, 4];
                 ingredient = _a[_i];
-                return [4 /*yield*/, Meal.find({ user_id: ingredient['id'] })];
+                return [4 /*yield*/, Ingredient.find({ _id: ingredient['id'] })];
             case 2:
                 found = _b.sent();
                 if (found.length === 0) {
                     res.status(400);
-                    res.send("Meal ID is invalid");
+                    res.send("Ingredient ID is invalid");
                     return [2 /*return*/];
                 }
                 _b.label = 3;
