@@ -20,9 +20,9 @@ router.post("/api/ingredients", authenticate, async (req: Request, res: Response
         });
     
         await ingredient.save();
-        res.status(201);
+
         res.location(`/api/ingredients/${ingredient._id}`);
-        res.send(ingredient);
+        res.status(201).send(ingredient);
     } catch {
         res.sendStatus(400);
     }
@@ -51,12 +51,8 @@ router.get("/api/ingredients/:id", authenticate, async (req: Request, res: Respo
 
     try {
         const ingredient = await Ingredient.findOne({ _id: req.params.id });
-        
-        if (ingredient.user_id === userId) {
-            res.send(ingredient);
-        } else {
-            res.sendStatus(403);
-        }
+
+        (ingredient.user_id === userId) ? res.send(ingredient) : res.sendStatus(403);
     } catch {
         res.sendStatus(404);
     }

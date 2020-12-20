@@ -58,11 +58,7 @@ router.get("/api/intakes/:id", authenticate, async (req: Request, res: Response)
     try {
         const intake = await Intake.findOne({ _id: req.params.id });
         
-        if (intake.user_id === userId) {
-            res.send(intake);
-        } else {
-            res.sendStatus(403);
-        }
+        (intake.user_id === userId) ? res.send(intake) : res.sendStatus(403);
     } catch {
         res.sendStatus(404);
     }

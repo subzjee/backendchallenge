@@ -61,11 +61,7 @@ router.get("/api/meals/:id", authenticate, async (req: Request, res: Response) =
     try {
         const meal = await Meal.findOne({ _id: req.params.id });
         
-        if (meal.user_id === userId) {
-            res.send(meal);
-        } else {
-            res.sendStatus(403);
-        }
+        (meal.user_id === userId) ? res.send(meal) : res.sendStatus(403);
     } catch {
         res.sendStatus(404);
     }
