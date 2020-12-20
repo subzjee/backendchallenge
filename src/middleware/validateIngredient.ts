@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 
-const User = require('../models/User');
-
 /*
 Validate the amount of calories.
 
