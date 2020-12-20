@@ -47,8 +47,28 @@ router.patch("/api/ingredients/:id", authenticate, async (req: Request, res: Res
     const { username, user_id } = req.body.user;
 
     try {
-        const ingredient = await Ingredient.findOne({ _id: req.params.id, user_id: user_id });
-        res.send(ingredient);
+        const ingredient = await Ingredient.findOne({ _id: req.params.id });
+
+        if (ingredient.user_id === user_id) {
+            if (req.body.name) {
+                ingredient.name = req.body.name;
+            }
+    
+            if (req.body.nutritional_vals) {
+                ingredient.nutritional_vals = req.body.nutritional_vals;
+            }
+    
+            if (req.body.calories) {
+                ingredient.calories = req.body.calories;
+            }
+
+            console.log(ingredient);
+    
+            await ingredient.save();
+            res.send(ingredient);
+        } else {
+            res.sendStatus(403);
+        }
     } catch {
         res.sendStatus(404);
     }
@@ -58,7 +78,18 @@ router.delete("/api/ingredients/:id", authenticate, async (req: Request, res: Re
     const { username, user_id } = req.body.user;
 
     try {
-        const ingredient = await Ingredient.deleteOne({ _id: req.params.id, user_id: user_id });
+        const ingredient = await Ingredient.findOne({ _id: req.params.id });
+
+        if (ingredient.user_id === user_id) {
+            try {
+                await Ingredient.deleteOne({ _id: req.params.id });
+            } catch {
+                res.sendStatus(404);
+            }
+            res.sendStatus(204);
+        } else {
+            res.sendStatus(403);
+        }
         res.send(ingredient);
     } catch {
         res.sendStatus(404);

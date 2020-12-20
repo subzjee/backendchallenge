@@ -2,8 +2,19 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose = require('mongoose');
 var userSchema = mongoose.Schema({
-    username: String,
-    password: String,
-    user_id: String
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    user_id: {
+        type: String,
+        required: true,
+        unique: true
+    }
 });
 module.exports = mongoose.model("User", userSchema);

@@ -80,7 +80,7 @@ router.get("/api/ingredients", authenticate_1.default, function (req, res) { ret
                 return [3 /*break*/, 4];
             case 3:
                 _b = _c.sent();
-                res.send(404);
+                res.sendStatus(404);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
@@ -102,24 +102,91 @@ router.get("/api/ingredients/:id", authenticate_1.default, function (req, res) {
                 return [3 /*break*/, 4];
             case 3:
                 _b = _c.sent();
-                res.send(404);
+                res.sendStatus(404);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
     });
 }); });
 router.patch("/api/ingredients/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, username, user_id;
-    return __generator(this, function (_b) {
-        _a = req.body.user, username = _a.username, user_id = _a.user_id;
-        return [2 /*return*/];
+    var _a, username, user_id, ingredient, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _a = req.body.user, username = _a.username, user_id = _a.user_id;
+                _c.label = 1;
+            case 1:
+                _c.trys.push([1, 6, , 7]);
+                return [4 /*yield*/, Ingredient.findOne({ _id: req.params.id })];
+            case 2:
+                ingredient = _c.sent();
+                if (!(ingredient.user_id === user_id)) return [3 /*break*/, 4];
+                if (req.body.name) {
+                    ingredient.name = req.body.name;
+                }
+                if (req.body.nutritional_vals) {
+                    ingredient.nutritional_vals = req.body.nutritional_vals;
+                }
+                if (req.body.calories) {
+                    ingredient.calories = req.body.calories;
+                }
+                console.log(ingredient);
+                return [4 /*yield*/, ingredient.save()];
+            case 3:
+                _c.sent();
+                res.send(ingredient);
+                return [3 /*break*/, 5];
+            case 4:
+                res.sendStatus(403);
+                _c.label = 5;
+            case 5: return [3 /*break*/, 7];
+            case 6:
+                _b = _c.sent();
+                res.sendStatus(404);
+                return [3 /*break*/, 7];
+            case 7: return [2 /*return*/];
+        }
     });
 }); });
 router.delete("/api/ingredients/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, username, user_id;
-    return __generator(this, function (_b) {
-        _a = req.body.user, username = _a.username, user_id = _a.user_id;
-        return [2 /*return*/];
+    var _a, username, user_id, ingredient, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
+            case 0:
+                _a = req.body.user, username = _a.username, user_id = _a.user_id;
+                _d.label = 1;
+            case 1:
+                _d.trys.push([1, 9, , 10]);
+                return [4 /*yield*/, Ingredient.findOne({ _id: req.params.id })];
+            case 2:
+                ingredient = _d.sent();
+                if (!(ingredient.user_id === user_id)) return [3 /*break*/, 7];
+                _d.label = 3;
+            case 3:
+                _d.trys.push([3, 5, , 6]);
+                return [4 /*yield*/, Ingredient.deleteOne({ _id: req.params.id })];
+            case 4:
+                _d.sent();
+                return [3 /*break*/, 6];
+            case 5:
+                _b = _d.sent();
+                res.sendStatus(404);
+                return [3 /*break*/, 6];
+            case 6:
+                res.sendStatus(204);
+                return [3 /*break*/, 8];
+            case 7:
+                res.sendStatus(403);
+                _d.label = 8;
+            case 8:
+                res.send(ingredient);
+                return [3 /*break*/, 10];
+            case 9:
+                _c = _d.sent();
+                res.sendStatus(404);
+                return [3 /*break*/, 10];
+            case 10: return [2 /*return*/];
+        }
     });
 }); });
 module.exports = router;
