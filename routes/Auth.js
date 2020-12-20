@@ -45,28 +45,47 @@ require('dotenv').config();
 router.post("/api/register", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var password, user_id, user;
     return __generator(this, function (_a) {
-        password = crypto.createHash('sha512').update(req.body.password).digest('hex');
-        user_id = crypto.createHash('md5').update(req.body.username).digest('hex');
-        user = new User({
-            username: req.body.username,
-            password: password,
-            user_id: user_id
-        });
-        // await user.save();
-        res.sendStatus(201);
-        return [2 /*return*/];
+        switch (_a.label) {
+            case 0:
+                password = crypto.createHash('sha512').update(req.body.password).digest('hex');
+                user_id = crypto.createHash('md5').update(req.body.username).digest('hex');
+                user = new User({
+                    username: req.body.username,
+                    password: password,
+                    user_id: user_id
+                });
+                return [4 /*yield*/, user.save()];
+            case 1:
+                _a.sent();
+                res.sendStatus(201);
+                return [2 /*return*/];
+        }
     });
 }); });
 router.get("/api/login", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, username, password, user_id, generatedToken;
-    return __generator(this, function (_b) {
-        _a = req.body, username = _a.username, password = _a.password;
-        user_id = 1;
-        generatedToken = jwt.sign({ username: username, user_id: user_id }, process.env.JWT_TOKEN_SECRET);
-        res.json({
-            token: generatedToken
-        });
-        return [2 /*return*/];
+    var _a, username, password, user, generatedToken, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _a = req.body, username = _a.username, password = _a.password;
+                password = crypto.createHash('sha512').update(req.body.password).digest('hex');
+                _c.label = 1;
+            case 1:
+                _c.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, User.findOne({ username: username, password: password })];
+            case 2:
+                user = _c.sent();
+                generatedToken = jwt.sign({ username: username, user_id: user.user_id }, process.env.JWT_TOKEN_SECRET);
+                res.json({
+                    token: generatedToken
+                });
+                return [3 /*break*/, 4];
+            case 3:
+                _b = _c.sent();
+                res.sendStatus(404);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
     });
 }); });
 module.exports = router;

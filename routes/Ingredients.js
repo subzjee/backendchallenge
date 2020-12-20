@@ -35,11 +35,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require('express');
+var authenticate_1 = __importDefault(require("../middleware/authenticate"));
 var Ingredient = require('../models/Ingredient');
 var router = express.Router();
-router.post("/api/ingredients", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("/api/ingredients", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var ingredient;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -58,7 +62,7 @@ router.post("/api/ingredients", function (req, res) { return __awaiter(void 0, v
         }
     });
 }); });
-router.get("/api/ingredients", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/api/ingredients", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var ingredients;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -70,7 +74,7 @@ router.get("/api/ingredients", function (req, res) { return __awaiter(void 0, vo
         }
     });
 }); });
-router.get("/api/ingredients/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/api/ingredients/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var ingredient;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -82,12 +86,12 @@ router.get("/api/ingredients/:id", function (req, res) { return __awaiter(void 0
         }
     });
 }); });
-router.patch("/api/ingredients/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.patch("/api/ingredients/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/];
     });
 }); });
-router.delete("/api/ingredients/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.delete("/api/ingredients/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/];
     });

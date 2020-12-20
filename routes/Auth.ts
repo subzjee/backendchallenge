@@ -18,20 +18,25 @@ router.post("/api/register", async (req: Request, res: Response) => {
         user_id
     });
 
-    // await user.save();
+    await user.save();
     res.sendStatus(201);
 })
 
 router.get("/api/login", async (req: Request, res: Response) => {
-    const { username, password } = req.body;
+    let { username, password } = req.body;
 
-    const user_id = 1;
+    password = crypto.createHash('sha512').update(req.body.password).digest('hex');
 
-    const generatedToken = jwt.sign({ username: username, user_id: user_id}, process.env.JWT_TOKEN_SECRET);
-    
-    res.json({
-        token: generatedToken
-    });
+    try {
+        const user = await User.findOne({ username: username, password: password });
+        const generatedToken = jwt.sign({ username: username, user_id: user.user_id}, process.env.JWT_TOKEN_SECRET);
+        
+        res.json({
+            token: generatedToken
+        });
+    } catch {
+        res.sendStatus(404);
+    }
 });
 
 module.exports = router;

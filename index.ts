@@ -12,13 +12,11 @@ app.use(express.json());
 app.use("/", ingredientRoutes);
 app.use("/", authRoutes);
 
-app.listen(process.env.SV_PORT);
-
-// mongoose
-//     .connect(`mongodb+srv://<${process.env.DB_USER}>:<${process.env.DB_PW}>@cluster0.gxuv0.mongodb.net/<${process.env.DB_NAME}>?retryWrites=true&w=majority`,
-//         { useNewUrlParser: true, useUnifiedTopology: true })
-//     .then(() => {
-//         app.listen(process.env.SV_PORT)
-//     }).catch((err) => {
-//         console.log(err);
-//     })
+mongoose
+    .connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PW}@cluster0.gxuv0.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
+        { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+        app.listen(process.env.SV_PORT)
+    }).catch((err) => {
+        console.log(err);
+    })
