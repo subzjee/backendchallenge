@@ -5,7 +5,7 @@ const express = require('express');
 import config from '../config';
 import { Request, Response } from 'express';
 import { Document } from 'mongoose';
-import { LoginInfo } from '../interfaces';
+import { ILoginInfo } from '../interfaces';
 import validateRegister from './middleware/validateRegister';
 import validateLogin from './middleware/validateLogin';
 
@@ -41,7 +41,7 @@ Verify the provided username and password.
 If valid, generate JWT token and return it.
 */
 router.get('/api/login', validateLogin, async (req: Request, res: Response) => {
-    let {username, password}: LoginInfo = req.body;
+    let {username, password}: ILoginInfo = req.body;
 
     password = crypto
                     .createHash('sha512')

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 import config from '../../config';
 import { Request, Response, NextFunction } from 'express';
-import { DecodedToken } from '../../interfaces';
+import { IDecodedToken } from '../../interfaces';
 
 /*
 Middleware to provide JWT authentication.
@@ -13,7 +13,7 @@ export default function authenticate(req: Request,
         const [prefix, token, ...rest] = req.headers.authorization.split(' ');
 
         if (prefix === 'Bearer') {
-            jwt.verify(token, config.jwtToken, (err: any, user: DecodedToken) => {
+            jwt.verify(token, config.jwtToken, (err: any, user: IDecodedToken) => {
                 if (err) {
                     return res.sendStatus(403);
                 }

@@ -1,9 +1,14 @@
-export interface DecodedToken {
+export interface IDecodedToken {
     username: string,
     user_id: string
 }
 
-export interface LoginInfo {
+export interface ILoginInfo {
     username: string,
     password: string
+}
+
+export interface IIngredient {
+    id: string,
+    amount: Number
 }

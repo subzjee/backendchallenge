@@ -53,7 +53,7 @@ function assertTimeNotInFuture(datetime: Number, res: Response) {
 }
 
 /*
-Middleware to validate GET parameters for Ingredient.
+Middleware to validate GET parameters for Intake.
 */
 export async function validatePost(req: Request,
                                    res: Response, next: NextFunction) {
@@ -68,7 +68,7 @@ export async function validatePost(req: Request,
 };
 
 /*
-Middleware to validate PATCH parameters for Ingredient.
+Middleware to validate PATCH parameters for Intake.
 */
 export async function validatePatch(req: Request,
                                     res: Response, next: NextFunction) {

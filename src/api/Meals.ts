@@ -2,6 +2,7 @@ const express = require('express');
 import { Request, Response, Router } from 'express';
 import { Document } from 'mongoose';
 import authenticate from './middleware/authenticate';
+import { validatePatch, validatePost } from './middleware/validateMeal';
 
 const Meal = require('../models/Meal');
 const Ingredient = require('../models/Ingredient');
@@ -12,7 +13,7 @@ const router: Router = express.Router();
 /*
 Create new meal.
 */
-router.post("/api/meals", authenticate, async (req: Request, res: Response) => {
+router.post("/api/meals", authenticate, validatePost, async (req: Request, res: Response) => {
     // Go through ingredients and check if they exist in database.
     for (const ingredient of req.body.ingredients) {
         const found = await Ingredient.findOne({ _id: ingredient['id'] });
@@ -71,7 +72,7 @@ router.get("/api/meals/:id", authenticate, async (req: Request, res: Response) =
 Update existing meal through resource ID param.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
-router.patch("/api/meals/:id", authenticate, async (req: Request, res: Response) => {
+router.patch("/api/meals/:id", authenticate, validatePatch, async (req: Request, res: Response) => {
     const userId: string = req.body.user_id;
 
     try {
