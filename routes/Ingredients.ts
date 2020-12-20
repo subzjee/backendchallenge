@@ -25,7 +25,7 @@ router.post("/api/ingredients", authenticate, async (req: Request, res: Response
 })
 
 /*
-Get all ingredients by owner's user_id.
+Get all ingredients by user ID.
 */
 router.get("/api/ingredients", authenticate, async (req: Request, res: Response) => {
     const userId = req.body.user_id;
@@ -59,7 +59,7 @@ router.get("/api/ingredients/:id", authenticate, async (req: Request, res: Respo
 })
 
 /*
-Update existing resource through resource ID param.
+Update existing ingredient through resource ID param.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.patch("/api/ingredients/:id", authenticate, async (req: Request, res: Response) => {
