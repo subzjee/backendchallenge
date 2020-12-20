@@ -5,14 +5,13 @@ var mongoose = require("mongoose");
 var ingredientRoutes = require('./routes/Ingredients');
 var authRoutes = require('./routes/Auth');
 var mealRoutes = require('./routes/Meals');
+var intakeRoutes = require('./routes/Intakes');
 require('dotenv').config();
 var app = express();
 // Setup Express to parse JSON body as middleware.
 app.use(express.json());
 // Import routes into router.
-app.use("/", authRoutes);
-app.use("/", ingredientRoutes);
-app.use("/", mealRoutes);
+app.use("/", authRoutes, ingredientRoutes, mealRoutes, intakeRoutes);
 // Connect to database and start server if connection is successful.
 mongoose
     .connect("mongodb+srv://" + process.env.DB_USER + ":" + process.env.DB_PW + "@cluster0.gxuv0.mongodb.net/" + process.env.DB_NAME + "?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })

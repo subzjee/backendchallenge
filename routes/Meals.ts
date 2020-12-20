@@ -1,16 +1,27 @@
 const express = require('express');
-import { Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
+import { DecodedToken } from '../interfaces';
 import authenticate from '../middleware/authenticate';
 
 const Meal = require('../models/Meal');
 
-const router = express.Router();
+const router: Router = express.Router();
 
 router.post("/api/meals", authenticate, async (req: Request, res: Response) => {
+    for (const ingredient of req.body.ingredients) {
+        const found = await Meal.find({ user_id: ingredient['id'] });
+
+        if (found.length === 0) {
+            res.status(400);
+            res.send("Ingredient ID is invalid");
+            return;
+        }
+    }
+
     const meal = new Meal({
         name: req.body.name,
         ingredients: req.body.ingredients,
-        user_id: req.body.user.user_id
+        user_id: req.body.user_id
     });
 
     await meal.save();
@@ -20,10 +31,10 @@ router.post("/api/meals", authenticate, async (req: Request, res: Response) => {
 })
 
 router.get("/api/meals", authenticate, async (req: Request, res: Response) => {
-    const { username, user_id } = req.body.user;
+    const user_id = req.body.user_id;
 
     try {
-        let meals = await Meal.find({ user_id: user_id });
+        const meals = await Meal.find({ user_id: user_id });
         res.send(meals);
     } catch {
         res.sendStatus(404);
@@ -31,7 +42,7 @@ router.get("/api/meals", authenticate, async (req: Request, res: Response) => {
 });
 
 router.get("/api/meals/:id", authenticate, async (req: Request, res: Response) => {
-    const { username, user_id } = req.body.user;
+    const user_id = req.body.user_id;
 
     try {
         const meal = await Meal.findOne({ _id: req.params.id });
@@ -47,9 +58,7 @@ router.get("/api/meals/:id", authenticate, async (req: Request, res: Response) =
 })
 
 router.patch("/api/meals/:id", authenticate, async (req: Request, res: Response) => {
-    const { username, user_id } = req.body.user;
-
-    console.log("test");
+    const user_id = req.body.user_id;
 
     try {
         const meal = await Meal.findOne({ _id: req.params.id });
@@ -74,7 +83,7 @@ router.patch("/api/meals/:id", authenticate, async (req: Request, res: Response)
 })
 
 router.delete("/api/meals/:id", authenticate, async (req: Request, res: Response) => {
-    const { username, user_id } = req.body.user;
+    const user_id = req.body.user_id;
 
     try {
         const meal = await Meal.findOne({ _id: req.params.id });

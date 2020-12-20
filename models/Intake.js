@@ -1,19 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose = require('mongoose');
-var ingredientSchema = mongoose.Schema({
-    name: {
+var intakeSchema = mongoose.Schema({
+    dateTime: {
         type: String,
         required: true,
-        trim: true,
-        lowercase: true,
     },
-    nutritional_vals: {
-        type: Map,
-        of: Number,
+    meal_id: {
+        type: String,
         required: true
     },
-    calories: {
+    amount: {
         type: Number,
         required: true,
     },
@@ -22,4 +19,4 @@ var ingredientSchema = mongoose.Schema({
         required: true
     }
 });
-module.exports = mongoose.model("Ingredient", ingredientSchema);
+module.exports = mongoose.model("Intake", intakeSchema);

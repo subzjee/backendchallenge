@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var express = require('express');
 var jwt = require('jsonwebtoken');
+var express = require('express');
 require('dotenv').config();
 /*
 Middleware to provide JWT authentication.
@@ -14,7 +14,7 @@ function authenticate(req, res, next) {
                 if (err) {
                     return res.sendStatus(403);
                 }
-                req.body.user = user;
+                req.body.user_id = user.user_id;
                 next();
             });
         }

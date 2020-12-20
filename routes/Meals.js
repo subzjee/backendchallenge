@@ -44,18 +44,36 @@ var authenticate_1 = __importDefault(require("../middleware/authenticate"));
 var Meal = require('../models/Meal');
 var router = express.Router();
 router.post("/api/meals", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var meal;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _i, _a, ingredient, found, meal;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
+                _i = 0, _a = req.body.ingredients;
+                _b.label = 1;
+            case 1:
+                if (!(_i < _a.length)) return [3 /*break*/, 4];
+                ingredient = _a[_i];
+                return [4 /*yield*/, Meal.find({ user_id: ingredient['id'] })];
+            case 2:
+                found = _b.sent();
+                if (found.length === 0) {
+                    res.status(400);
+                    res.send("Meal ID is invalid");
+                    return [2 /*return*/];
+                }
+                _b.label = 3;
+            case 3:
+                _i++;
+                return [3 /*break*/, 1];
+            case 4:
                 meal = new Meal({
                     name: req.body.name,
                     ingredients: req.body.ingredients,
-                    user_id: req.body.user.user_id
+                    user_id: req.body.user_id
                 });
                 return [4 /*yield*/, meal.save()];
-            case 1:
-                _a.sent();
+            case 5:
+                _b.sent();
                 res.status(201);
                 res.location("/api/ingredients/" + meal._id);
                 res.send(meal);
@@ -64,21 +82,21 @@ router.post("/api/meals", authenticate_1.default, function (req, res) { return _
     });
 }); });
 router.get("/api/meals", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, username, user_id, meals, _b;
-    return __generator(this, function (_c) {
-        switch (_c.label) {
+    var user_id, meals, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a = req.body.user, username = _a.username, user_id = _a.user_id;
-                _c.label = 1;
+                user_id = req.body.user_id;
+                _b.label = 1;
             case 1:
-                _c.trys.push([1, 3, , 4]);
+                _b.trys.push([1, 3, , 4]);
                 return [4 /*yield*/, Meal.find({ user_id: user_id })];
             case 2:
-                meals = _c.sent();
+                meals = _b.sent();
                 res.send(meals);
                 return [3 /*break*/, 4];
             case 3:
-                _b = _c.sent();
+                _a = _b.sent();
                 res.sendStatus(404);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
@@ -86,17 +104,17 @@ router.get("/api/meals", authenticate_1.default, function (req, res) { return __
     });
 }); });
 router.get("/api/meals/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, username, user_id, meal, _b;
-    return __generator(this, function (_c) {
-        switch (_c.label) {
+    var user_id, meal, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a = req.body.user, username = _a.username, user_id = _a.user_id;
-                _c.label = 1;
+                user_id = req.body.user_id;
+                _b.label = 1;
             case 1:
-                _c.trys.push([1, 3, , 4]);
+                _b.trys.push([1, 3, , 4]);
                 return [4 /*yield*/, Meal.findOne({ _id: req.params.id })];
             case 2:
-                meal = _c.sent();
+                meal = _b.sent();
                 if (meal.user_id === user_id) {
                     res.send(meal);
                 }
@@ -105,7 +123,7 @@ router.get("/api/meals/:id", authenticate_1.default, function (req, res) { retur
                 }
                 return [3 /*break*/, 4];
             case 3:
-                _b = _c.sent();
+                _a = _b.sent();
                 res.sendStatus(404);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
@@ -113,18 +131,17 @@ router.get("/api/meals/:id", authenticate_1.default, function (req, res) { retur
     });
 }); });
 router.patch("/api/meals/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, username, user_id, meal, _b;
-    return __generator(this, function (_c) {
-        switch (_c.label) {
+    var user_id, meal, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a = req.body.user, username = _a.username, user_id = _a.user_id;
-                console.log("test");
-                _c.label = 1;
+                user_id = req.body.user_id;
+                _b.label = 1;
             case 1:
-                _c.trys.push([1, 6, , 7]);
+                _b.trys.push([1, 6, , 7]);
                 return [4 /*yield*/, Meal.findOne({ _id: req.params.id })];
             case 2:
-                meal = _c.sent();
+                meal = _b.sent();
                 if (!(meal.user_id === user_id)) return [3 /*break*/, 4];
                 if (req.body.name) {
                     meal.name = req.body.name;
@@ -134,15 +151,15 @@ router.patch("/api/meals/:id", authenticate_1.default, function (req, res) { ret
                 }
                 return [4 /*yield*/, meal.save()];
             case 3:
-                _c.sent();
+                _b.sent();
                 res.send(meal);
                 return [3 /*break*/, 5];
             case 4:
                 res.sendStatus(403);
-                _c.label = 5;
+                _b.label = 5;
             case 5: return [3 /*break*/, 7];
             case 6:
-                _b = _c.sent();
+                _a = _b.sent();
                 res.sendStatus(404);
                 return [3 /*break*/, 7];
             case 7: return [2 /*return*/];
@@ -150,27 +167,27 @@ router.patch("/api/meals/:id", authenticate_1.default, function (req, res) { ret
     });
 }); });
 router.delete("/api/meals/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, username, user_id, meal, _b, _c;
-    return __generator(this, function (_d) {
-        switch (_d.label) {
+    var user_id, meal, _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
-                _a = req.body.user, username = _a.username, user_id = _a.user_id;
-                _d.label = 1;
+                user_id = req.body.user_id;
+                _c.label = 1;
             case 1:
-                _d.trys.push([1, 9, , 10]);
+                _c.trys.push([1, 9, , 10]);
                 return [4 /*yield*/, Meal.findOne({ _id: req.params.id })];
             case 2:
-                meal = _d.sent();
+                meal = _c.sent();
                 if (!(meal.user_id === user_id)) return [3 /*break*/, 7];
-                _d.label = 3;
+                _c.label = 3;
             case 3:
-                _d.trys.push([3, 5, , 6]);
+                _c.trys.push([3, 5, , 6]);
                 return [4 /*yield*/, Meal.deleteOne({ _id: req.params.id })];
             case 4:
-                _d.sent();
+                _c.sent();
                 return [3 /*break*/, 6];
             case 5:
-                _b = _d.sent();
+                _a = _c.sent();
                 res.sendStatus(404);
                 return [3 /*break*/, 6];
             case 6:
@@ -178,10 +195,10 @@ router.delete("/api/meals/:id", authenticate_1.default, function (req, res) { re
                 return [3 /*break*/, 8];
             case 7:
                 res.sendStatus(403);
-                _d.label = 8;
+                _c.label = 8;
             case 8: return [3 /*break*/, 10];
             case 9:
-                _c = _d.sent();
+                _b = _c.sent();
                 res.sendStatus(404);
                 return [3 /*break*/, 10];
             case 10: return [2 /*return*/];

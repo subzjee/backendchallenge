@@ -1,14 +1,9 @@
+const jwt = require('jsonwebtoken');
 const express = require('express');
 import { Request, Response, NextFunction } from 'express';
-
-const jwt = require('jsonwebtoken');
+import { DecodedToken } from '../interfaces'
 
 require('dotenv').config()
-
-interface DecodedToken {
-    username: string,
-    user_id: string
-}
 
 /*
 Middleware to provide JWT authentication.
@@ -23,7 +18,7 @@ export default function authenticate(req: Request, res: Response, next: NextFunc
                     return res.sendStatus(403);
                 }
     
-                req.body.user = user;
+                req.body.user_id = user.user_id;
                 next();
             });
         }

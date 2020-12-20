@@ -1,18 +1,15 @@
 const mongoose = require('mongoose');
 
-const ingredientSchema = mongoose.Schema({
-    name: {
+const intakeSchema = mongoose.Schema({
+    dateTime: {
         type: String,
         required: true,
-        trim: true,
-        lowercase: true,
     },
-    nutritional_vals: {
-        type: Map,
-        of: Number,
+    meal_id: {
+        type: String,
         required: true
     },
-    calories: {
+    amount: {
         type: Number,
         required: true,
     },
@@ -22,6 +19,6 @@ const ingredientSchema = mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model("Ingredient", ingredientSchema);
+module.exports = mongoose.model("Intake", intakeSchema);
 
 export {}
