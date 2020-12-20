@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
-
-const intakeSchema = mongoose.Schema({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var mongoose = require('mongoose');
+var intakeSchema = mongoose.Schema({
     dateTime: {
         type: String,
         required: true,
@@ -12,13 +13,11 @@ const intakeSchema = mongoose.Schema({
     amount: {
         type: Number,
         required: true,
+        min: [1, 'Need positive amount of meals']
     },
     user_id: {
         type: String,
-        required: true
+        required: true,
     }
-})
-
+});
 module.exports = mongoose.model("Intake", intakeSchema);
-
-export {}

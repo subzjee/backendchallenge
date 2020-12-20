@@ -35,29 +35,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 var express = require('express');
+var config_1 = __importDefault(require("../config"));
 var User = require('../models/User');
 var router = express.Router();
-require('dotenv').config();
 /*
 Verifies if the given username doesn't already exist.
 If it doesn't exist, create new user.
 Otherwise, throw 403.
 */
 router.post('/api/register', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var password, userId, user, user_1, _a;
+    var password, user, user_1, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 password = crypto
                     .createHash('sha512')
                     .update(req.body.password).digest('hex');
-                userId = crypto
-                    .createHash('md5')
-                    .update(req.body.username).digest('hex');
                 return [4 /*yield*/, User.findOne({ username: req.body.username })];
             case 1:
                 user = _b.sent();
@@ -68,8 +68,7 @@ router.post('/api/register', function (req, res) { return __awaiter(void 0, void
                 _b.trys.push([2, 4, , 5]);
                 user_1 = new User({
                     username: req.body.username,
-                    password: password,
-                    user_id: userId,
+                    password: password
                 });
                 return [4 /*yield*/, user_1.save()];
             case 3:
@@ -78,7 +77,7 @@ router.post('/api/register', function (req, res) { return __awaiter(void 0, void
                 return [3 /*break*/, 5];
             case 4:
                 _a = _b.sent();
-                res.sendStatus(404);
+                res.sendStatus(400);
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
         }
@@ -106,7 +105,7 @@ router.get('/api/login', function (req, res) { return __awaiter(void 0, void 0, 
                 user = _c.sent();
                 if (user) {
                     generatedToken = jwt.sign({ username: username,
-                        user_id: user.user_id }, process.env.JWT_TOKEN_SECRET);
+                        user_id: user._id }, config_1.default.jwtToken);
                     res.json({
                         token: generatedToken,
                     });

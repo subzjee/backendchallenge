@@ -1,19 +1,17 @@
-const mongoose = require('mongoose');
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var mongoose = require('mongoose');
 var validatorsNutritional = [
     { validator: hasAllValues, msg: 'Need carbs, protein and fats' },
     { validator: exactLength, msg: 'Can only hold carbs, protein and fats' }
 ];
-
-function hasAllValues(val: any) {
+function hasAllValues(val) {
     return val.has('carbs') && val.has('fats') && val.has('protein');
 }
-
-function exactLength(val: any) {
+function exactLength(val) {
     return val.size === 3;
 }
-
-const ingredientSchema = mongoose.Schema({
+var ingredientSchema = mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -29,13 +27,12 @@ const ingredientSchema = mongoose.Schema({
     calories: {
         type: Number,
         required: true,
+        min: [1, 'Too low amount of calories']
     },
     user_id: {
         type: String,
         required: true
+        // validate: ["USER EXISTS"]
     }
-})
-
+});
 module.exports = mongoose.model("Ingredient", ingredientSchema);
-
-export {}

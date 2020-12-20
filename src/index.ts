@@ -1,12 +1,10 @@
 import express = require('express');
 import mongoose = require('mongoose');
-
-const ingredientRoutes = require('./routes/Ingredients');
-const authRoutes = require('./routes/Auth');
-const mealRoutes = require('./routes/Meals');
-const intakeRoutes = require('./routes/Intakes')
-
-require('dotenv').config();
+import config from './config';
+const ingredientRoutes = require('./api/Ingredients');
+const authRoutes = require('./api/Auth');
+const mealRoutes = require('./api/Meals');
+const intakeRoutes = require('./api/Intakes')
 
 const app: express.Application = express();
 
@@ -16,12 +14,17 @@ app.use(express.json());
 // Import routes into router.
 app.use("/", authRoutes, ingredientRoutes, mealRoutes, intakeRoutes);
 
+config.dbUrl = config.dbUrl ?? "";
+
 // Connect to database and start server if connection is successful.
 mongoose
-    .connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PW}@cluster0.gxuv0.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
+    .connect(config.dbUrl,
         { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
-        app.listen(process.env.SV_PORT)
+        console.log("Connected to database");
+        app.listen(config.port, () => {
+            console.log(`Server is listening on port ${config.port}`)
+        });
     }).catch((err) => {
         console.log(err);
     })

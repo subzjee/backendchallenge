@@ -2,14 +2,13 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const express = require('express');
 
+import config from '../config';
 import { Request, Response } from 'express';
 import { Document } from 'mongoose';
 import { LoginInfo } from '../interfaces';
 
 const User = require('../models/User');
 const router = express.Router();
-
-require('dotenv').config();
 
 /*
 Verifies if the given username doesn't already exist.
@@ -20,9 +19,6 @@ router.post('/api/register', async (req: Request, res: Response) => {
     const password: string = crypto
                         .createHash('sha512')
                         .update(req.body.password).digest('hex');
-    const userId: string = crypto
-                        .createHash('md5')
-                        .update(req.body.username).digest('hex');
 
     const user = await User.findOne({username: req.body.username});
 
@@ -32,14 +28,13 @@ router.post('/api/register', async (req: Request, res: Response) => {
         try {
             const user: Document = new User({
                 username: req.body.username,
-                password,
-                user_id: userId,
+                password
             });
 
             await user.save();
             res.sendStatus(201);
         } catch {
-            res.sendStatus(404);
+            res.sendStatus(400);
         }
     }
 });
@@ -61,8 +56,8 @@ router.get('/api/login', async (req: Request, res: Response) => {
 
         if (user) {
             const generatedToken: string = jwt.sign({username: username,
-                                             user_id: user.user_id},
-                                             process.env.JWT_TOKEN_SECRET);
+                                             user_id: user._id},
+                                             config.jwtToken);
             
             res.json({
                 token: generatedToken,

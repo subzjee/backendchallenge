@@ -4,10 +4,12 @@ const mealIngredientSchema = mongoose.Schema({
     id: {
         type: String,
         required: true
+        // validate: ["INGREDIENT EXISTS"]
     },
     amount: {
         type: Number,
-        required: true
+        required: true,
+        min: [1, 'Too low amount of ingredient']
     }
 }) 
 
@@ -21,10 +23,12 @@ const mealSchema = mongoose.Schema({
     ingredients: {
         type: [mealIngredientSchema],
         required: true
+        // validate: ["POSITIVE AMOUNT"]
     },
     user_id: {
         type: String,
         required: true
+        // validate: ["USER EXISTS"]
     }
 })
 
