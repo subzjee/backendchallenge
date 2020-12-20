@@ -1,6 +1,5 @@
 const express = require('express');
-import { Request, Response, Router } from 'express';
-import { DecodedToken } from '../interfaces';
+import {Request, Response, Router} from 'express';
 import authenticate from '../middleware/authenticate';
 
 const Intake = require('../models/Intake');
@@ -9,7 +8,7 @@ const Meal = require('../models/Meal');
 const router: Router = express.Router();
 
 router.post("/api/intakes", authenticate, async (req: Request, res: Response) => {
-    const found = await Meal.find({ _id : req.body.meal_id });
+    const found = await Meal.find({_id: req.body.meal_id});
 
     if (found.length === 0) {
         res.status(400);
@@ -28,7 +27,7 @@ router.post("/api/intakes", authenticate, async (req: Request, res: Response) =>
     res.status(201);
     res.location(`/api/ingredients/${intake._id}`);
     res.send(intake);
-})
+});
 
 router.get("/api/intakes", authenticate, async (req: Request, res: Response) => {
     const user_id = req.body.user_id;

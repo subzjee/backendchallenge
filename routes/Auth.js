@@ -47,13 +47,17 @@ Verifies if the given username doesn't already exist.
 If it doesn't exist, create new user.
 Otherwise, throw 403.
 */
-router.post("/api/register", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var password, user_id, user, user_1, _a;
+router.post('/api/register', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var password, userId, user, user_1, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                password = crypto.createHash('sha512').update(req.body.password).digest('hex');
-                user_id = crypto.createHash('md5').update(req.body.username).digest('hex');
+                password = crypto
+                    .createHash('sha512')
+                    .update(req.body.password).digest('hex');
+                userId = crypto
+                    .createHash('md5')
+                    .update(req.body.username).digest('hex');
                 return [4 /*yield*/, User.findOne({ username: req.body.username })];
             case 1:
                 user = _b.sent();
@@ -65,7 +69,7 @@ router.post("/api/register", function (req, res) { return __awaiter(void 0, void
                 user_1 = new User({
                     username: req.body.username,
                     password: password,
-                    user_id: user_id
+                    userId: userId,
                 });
                 return [4 /*yield*/, user_1.save()];
             case 3:
@@ -84,23 +88,27 @@ router.post("/api/register", function (req, res) { return __awaiter(void 0, void
 Verify the provided username and password.
 If valid, generate JWT token and return it.
 */
-router.get("/api/login", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.get('/api/login', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, username, password, user, generatedToken, _b;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
                 _a = req.body, username = _a.username, password = _a.password;
-                password = crypto.createHash('sha512').update(req.body.password).digest('hex');
+                password = crypto
+                    .createHash('sha512')
+                    .update(req.body.password).digest('hex');
                 _c.label = 1;
             case 1:
                 _c.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, User.findOne({ username: username, password: password })];
+                return [4 /*yield*/, User.findOne({ username: username,
+                        password: password })];
             case 2:
                 user = _c.sent();
                 if (user) {
-                    generatedToken = jwt.sign({ username: username, user_id: user.user_id }, process.env.JWT_TOKEN_SECRET);
+                    generatedToken = jwt.sign({ username: username,
+                        user_id: user.user_id }, process.env.JWT_TOKEN_SECRET);
                     res.json({
-                        token: generatedToken
+                        token: generatedToken,
                     });
                 }
                 else {
