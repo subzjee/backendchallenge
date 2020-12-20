@@ -12,14 +12,24 @@ router.post("/api/register", async (req: Request, res: Response) => {
     const password = crypto.createHash('sha512').update(req.body.password).digest('hex');
     const user_id = crypto.createHash('md5').update(req.body.username).digest('hex');
 
-    const user = new User({
-        username: req.body.username,
-        password,
-        user_id
-    });
+    const user = await User.findOne({ username: req.body.username, password: password });
 
-    await user.save();
-    res.sendStatus(201);
+    if (user) {
+        res.sendStatus(403);
+    } else {
+        try {
+            const user = new User({
+                username: req.body.username,
+                password,
+                user_id
+            });
+        
+            await user.save();
+            res.sendStatus(201);
+        } catch {
+            res.sendStatus(404);
+        }
+    }
 })
 
 router.get("/api/login", async (req: Request, res: Response) => {

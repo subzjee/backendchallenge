@@ -52,8 +52,9 @@ router.post("/api/ingredients", authenticate_1.default, function (req, res) { re
                     name: req.body.name,
                     nutritional_vals: req.body.nutritional_vals,
                     calories: req.body.calories,
-                    user_id: req.body.user_id
+                    user_id: req.body.user.user_id
                 });
+                console.log(ingredient);
                 return [4 /*yield*/, ingredient.save()];
             case 1:
                 _a.sent();
@@ -86,24 +87,38 @@ router.get("/api/ingredients", authenticate_1.default, function (req, res) { ret
     });
 }); });
 router.get("/api/ingredients/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var ingredient;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, Ingredient.findOne({ _id: req.params.id })];
+    var _a, username, user_id, ingredient, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _a = req.body.user, username = _a.username, user_id = _a.user_id;
+                _c.label = 1;
             case 1:
-                ingredient = _a.sent();
+                _c.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, Ingredient.findOne({ _id: req.params.id, user_id: user_id })];
+            case 2:
+                ingredient = _c.sent();
                 res.send(ingredient);
-                return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 3:
+                _b = _c.sent();
+                res.send(404);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); });
 router.patch("/api/ingredients/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
+    var _a, username, user_id;
+    return __generator(this, function (_b) {
+        _a = req.body.user, username = _a.username, user_id = _a.user_id;
         return [2 /*return*/];
     });
 }); });
 router.delete("/api/ingredients/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
+    var _a, username, user_id;
+    return __generator(this, function (_b) {
+        _a = req.body.user, username = _a.username, user_id = _a.user_id;
         return [2 /*return*/];
     });
 }); });

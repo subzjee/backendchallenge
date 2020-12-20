@@ -43,22 +43,35 @@ var User = require('../models/User');
 var router = express.Router();
 require('dotenv').config();
 router.post("/api/register", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var password, user_id, user;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var password, user_id, user, user_1, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
                 password = crypto.createHash('sha512').update(req.body.password).digest('hex');
                 user_id = crypto.createHash('md5').update(req.body.username).digest('hex');
-                user = new User({
+                return [4 /*yield*/, User.findOne({ username: req.body.username, password: password })];
+            case 1:
+                user = _b.sent();
+                if (!user) return [3 /*break*/, 2];
+                res.sendStatus(403);
+                return [3 /*break*/, 5];
+            case 2:
+                _b.trys.push([2, 4, , 5]);
+                user_1 = new User({
                     username: req.body.username,
                     password: password,
                     user_id: user_id
                 });
-                return [4 /*yield*/, user.save()];
-            case 1:
-                _a.sent();
+                return [4 /*yield*/, user_1.save()];
+            case 3:
+                _b.sent();
                 res.sendStatus(201);
-                return [2 /*return*/];
+                return [3 /*break*/, 5];
+            case 4:
+                _a = _b.sent();
+                res.sendStatus(404);
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); });
