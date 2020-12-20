@@ -1,8 +1,8 @@
 const express = require('express');
 import { Request, Response } from 'express';
 import { Document } from 'mongoose';
-import authenticate from '../middleware/authenticate';
-import { validatePatch, validatePost } from '../middleware/validateIngredient';
+import authenticate from './middleware/authenticate';
+import { validatePatch, validatePost } from './middleware/validateIngredient';
 
 const Ingredient = require('../models/Ingredient');
 

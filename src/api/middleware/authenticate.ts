@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 
-import config from '../config';
+import config from '../../config';
 import { Request, Response, NextFunction } from 'express';
-import { DecodedToken } from '../interfaces';
+import { DecodedToken } from '../../interfaces';
 
 /*
 Middleware to provide JWT authentication.

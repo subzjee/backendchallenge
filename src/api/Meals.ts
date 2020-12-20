@@ -1,7 +1,7 @@
 const express = require('express');
 import { Request, Response, Router } from 'express';
 import { Document } from 'mongoose';
-import authenticate from '../middleware/authenticate';
+import authenticate from './middleware/authenticate';
 
 const Meal = require('../models/Meal');
 const Ingredient = require('../models/Ingredient');

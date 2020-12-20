@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-const User = require('../models/User');
+const User = require('../../models/User');
 
 /*
 Middleware to validate parameters for registration.

@@ -6,8 +6,8 @@ import config from '../config';
 import { Request, Response } from 'express';
 import { Document } from 'mongoose';
 import { LoginInfo } from '../interfaces';
-import validateRegister from '../middleware/validateRegister';
-import validateLogin from '../middleware/validateLogin';
+import validateRegister from './middleware/validateRegister';
+import validateLogin from './middleware/validateLogin';
 
 const User = require('../models/User');
 const router = express.Router();
