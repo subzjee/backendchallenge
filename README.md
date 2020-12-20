@@ -1,0 +1,4 @@
+# Assumptions
+- All structures are private to the creating user. This is why I add the `user_id` to each MongoDB document.
+- Meals can consist out of ingredients that are not found in the database. Even if the ingredient is not in the database, it could very well be a perfectly fine meal. The user is just not able to get functional information of that ingredient. Likewise, intake can consist out of meals not in the database.
+- As this is just a proof-of-concept, I have decided to not expire JSON Web Tokens. This also makes it easier to test. In a production environment, you would have to let the tokens expire and refresh if needed.
