@@ -6,6 +6,7 @@ var ingredientSchema = mongoose.Schema({
         type: Map,
         of: Number
     },
-    calories: Number
+    calories: Number,
+    user_id: String
 });
 module.exports = mongoose.model("Ingredient", ingredientSchema);

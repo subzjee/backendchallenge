@@ -10,7 +10,8 @@ router.post("/api/ingredients", authenticate, async (req: Request, res: Response
     const ingredient = new Ingredient({
         name: req.body.name,
         nutritional_vals: req.body.nutritional_vals,
-        calories: req.body.calories
+        calories: req.body.calories,
+        user_id: req.body.user_id
     });
 
     await ingredient.save();
@@ -19,8 +20,14 @@ router.post("/api/ingredients", authenticate, async (req: Request, res: Response
 })
 
 router.get("/api/ingredients", authenticate, async (req: Request, res: Response) => {
-    const ingredients = await Ingredient.find({});
-    res.send(req);
+    const { username, user_id } = req.body.user;
+
+    try {
+        const ingredients = await Ingredient.find({ user_id: user_id });
+        res.send(ingredients);
+    } catch {
+        res.send(404);
+    }
 });
 
 router.get("/api/ingredients/:id", authenticate, async (req: Request, res: Response) => {

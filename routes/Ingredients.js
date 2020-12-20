@@ -51,7 +51,8 @@ router.post("/api/ingredients", authenticate_1.default, function (req, res) { re
                 ingredient = new Ingredient({
                     name: req.body.name,
                     nutritional_vals: req.body.nutritional_vals,
-                    calories: req.body.calories
+                    calories: req.body.calories,
+                    user_id: req.body.user_id
                 });
                 return [4 /*yield*/, ingredient.save()];
             case 1:
@@ -63,14 +64,24 @@ router.post("/api/ingredients", authenticate_1.default, function (req, res) { re
     });
 }); });
 router.get("/api/ingredients", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var ingredients;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, Ingredient.find({})];
+    var _a, username, user_id, ingredients, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _a = req.body.user, username = _a.username, user_id = _a.user_id;
+                _c.label = 1;
             case 1:
-                ingredients = _a.sent();
-                res.send(req);
-                return [2 /*return*/];
+                _c.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, Ingredient.find({ user_id: user_id })];
+            case 2:
+                ingredients = _c.sent();
+                res.send(ingredients);
+                return [3 /*break*/, 4];
+            case 3:
+                _b = _c.sent();
+                res.send(404);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); });

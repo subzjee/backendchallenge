@@ -16,7 +16,9 @@ function authenticate(req, res, next) {
             });
         }
     }
-    res.sendStatus(401);
+    else {
+        res.sendStatus(401);
+    }
 }
 exports.default = authenticate;
 ;

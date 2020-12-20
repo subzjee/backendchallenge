@@ -7,7 +7,6 @@ require('dotenv').config()
 
 interface DecodedToken {
     username: string,
-    password: string,
     user_id: string
 }
 
@@ -16,7 +15,7 @@ export default function authenticate(req: Request, res: Response, next: any) {
         const [ prefix, token, ...rest ] = req.headers.authorization.split(' ');
         
         if (prefix === "Bearer") {
-            jwt.verify(token, process.env.JWT_TOKEN_SECRET, (err: any, user: DecodedToken) => {
+            jwt.verify(token, process.env.JWT_TOKEN_SECRET, (err: any, user: any) => {
                 if (err) {
                     return res.sendStatus(403);
                 }
@@ -25,7 +24,7 @@ export default function authenticate(req: Request, res: Response, next: any) {
                 next();
             });
         }
+    } else {
+        res.sendStatus(401);
     }
-
-    res.sendStatus(401);
 };
