@@ -25,15 +25,15 @@ router.post("/api/intakes", authenticate, async (req: Request, res: Response) =>
 
     await intake.save();
     res.status(201);
-    res.location(`/api/ingredients/${intake._id}`);
+    res.location(`/api/intakes/${intake._id}`);
     res.send(intake);
 });
 
 router.get("/api/intakes", authenticate, async (req: Request, res: Response) => {
-    const user_id = req.body.user_id;
+    const userId = req.body.user_id;
 
     try {
-        let intakes = await Intake.find({ user_id: user_id });
+        let intakes = await Intake.find({ user_id: userId });
         res.send(intakes);
     } catch {
         res.sendStatus(404);
@@ -41,15 +41,15 @@ router.get("/api/intakes", authenticate, async (req: Request, res: Response) => 
 });
 
 router.get("/api/intakes/:id", authenticate, async (req: Request, res: Response) => {
-    const user_id = req.body.user_id;
+    const userId = req.body.user_id;
 })
 
 router.patch("/api/intakes/:id", authenticate, async (req: Request, res: Response) => {
-    const user_id = req.body.user_id;
+    const userId = req.body.user_id;
 })
 
 router.delete("/api/intakes/:id", authenticate, async (req: Request, res: Response) => {
-    const user_id = req.body.user_id;
+    const userId = req.body.user_id;
 })
 
 module.exports = router;

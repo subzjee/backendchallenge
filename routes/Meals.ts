@@ -4,7 +4,7 @@ import { DecodedToken } from '../interfaces';
 import authenticate from '../middleware/authenticate';
 
 const Meal = require('../models/Meal');
-const Ingredient = require('../models/Ingredient')
+const Ingredient = require('../models/Ingredient');
 
 const router: Router = express.Router();
 
@@ -27,15 +27,15 @@ router.post("/api/meals", authenticate, async (req: Request, res: Response) => {
 
     await meal.save();
     res.status(201);
-    res.location(`/api/ingredients/${meal._id}`);
+    res.location(`/api/meals/${meal._id}`);
     res.send(meal);
 })
 
 router.get("/api/meals", authenticate, async (req: Request, res: Response) => {
-    const user_id = req.body.user_id;
+    const userId = req.body.user_id;
 
     try {
-        const meals = await Meal.find({ user_id: user_id });
+        const meals = await Meal.find({ user_id: userId });
         res.send(meals);
     } catch {
         res.sendStatus(404);
@@ -43,12 +43,12 @@ router.get("/api/meals", authenticate, async (req: Request, res: Response) => {
 });
 
 router.get("/api/meals/:id", authenticate, async (req: Request, res: Response) => {
-    const user_id = req.body.user_id;
+    const userId = req.body.user_id;
 
     try {
         const meal = await Meal.findOne({ _id: req.params.id });
         
-        if (meal.user_id === user_id) {
+        if (meal.user_id === userId) {
             res.send(meal);
         } else {
             res.sendStatus(403);
@@ -59,12 +59,12 @@ router.get("/api/meals/:id", authenticate, async (req: Request, res: Response) =
 })
 
 router.patch("/api/meals/:id", authenticate, async (req: Request, res: Response) => {
-    const user_id = req.body.user_id;
+    const userId = req.body.user_id;
 
     try {
         const meal = await Meal.findOne({ _id: req.params.id });
 
-        if (meal.user_id === user_id) {
+        if (meal.user_id === userId) {
             if (req.body.name) {
                 meal.name = req.body.name;
             }
@@ -84,12 +84,12 @@ router.patch("/api/meals/:id", authenticate, async (req: Request, res: Response)
 })
 
 router.delete("/api/meals/:id", authenticate, async (req: Request, res: Response) => {
-    const user_id = req.body.user_id;
+    const userId = req.body.user_id;
 
     try {
         const meal = await Meal.findOne({ _id: req.params.id });
 
-        if (meal.user_id === user_id) {
+        if (meal.user_id === userId) {
             try {
                 await Meal.deleteOne({ _id: req.params.id });
             } catch {

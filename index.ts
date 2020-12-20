@@ -6,7 +6,7 @@ const authRoutes = require('./routes/Auth');
 const mealRoutes = require('./routes/Meals');
 const intakeRoutes = require('./routes/Intakes')
 
-require('dotenv').config()
+require('dotenv').config();
 
 const app: express.Application = express();
 

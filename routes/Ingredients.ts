@@ -28,10 +28,10 @@ router.post("/api/ingredients", authenticate, async (req: Request, res: Response
 Get all ingredients by owner's user_id.
 */
 router.get("/api/ingredients", authenticate, async (req: Request, res: Response) => {
-    const user_id = req.body.user_id;
+    const userId = req.body.user_id;
 
     try {
-        let ingredients = await Ingredient.find({ user_id: user_id });
+        let ingredients = await Ingredient.find({ user_id: userId });
         res.send(ingredients);
     } catch {
         res.sendStatus(404);
@@ -43,12 +43,12 @@ Get a specific ingredient by resource ID.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.get("/api/ingredients/:id", authenticate, async (req: Request, res: Response) => {
-    const user_id = req.body.user_id;
+    const userId = req.body.user_id;
 
     try {
         const ingredient = await Ingredient.findOne({ _id: req.params.id });
         
-        if (ingredient.user_id === user_id) {
+        if (ingredient.user_id === userId) {
             res.send(ingredient);
         } else {
             res.sendStatus(403);
@@ -63,12 +63,12 @@ Update existing resource through resource ID param.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.patch("/api/ingredients/:id", authenticate, async (req: Request, res: Response) => {
-    const user_id = req.body.user_id;
+    const userId = req.body.user_id;
 
     try {
         const ingredient = await Ingredient.findOne({ _id: req.params.id });
 
-        if (ingredient.user_id === user_id) {
+        if (ingredient.user_id === userId) {
             if (req.body.name) {
                 ingredient.name = req.body.name;
             }
@@ -96,12 +96,12 @@ Delete specific ingredient, as indicated by resource ID param.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.delete("/api/ingredients/:id", authenticate, async (req: Request, res: Response) => {
-    const user_id = req.body.user_id;
+    const userId = req.body.user_id;
 
     try {
         const ingredient = await Ingredient.findOne({ _id: req.params.id });
 
-        if (ingredient.user_id === user_id) {
+        if (ingredient.user_id === userId) {
             try {
                 await Ingredient.deleteOne({ _id: req.params.id });
             } catch {
