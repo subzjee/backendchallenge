@@ -15,9 +15,9 @@ Create new meal.
 router.post("/api/meals", authenticate, async (req: Request, res: Response) => {
     // Go through ingredients and check if they exist in database.
     for (const ingredient of req.body.ingredients) {
-        const found = await Ingredient.find({ _id: ingredient['id'] });
+        const found = await Ingredient.findOne({ _id: ingredient['id'] });
 
-        if (found.length === 0) {
+        if (!found) {
             res.status(400);
             res.send("Ingredient ID is invalid");
             return;
@@ -89,9 +89,9 @@ router.patch("/api/meals/:id", authenticate, async (req: Request, res: Response)
             if (req.body.ingredients) {
                 // Go through ingredients and check if they exist in database.
                 for (const ingredient of req.body.ingredients) {
-                    const found = await Ingredient.find({ _id: ingredient['id'] });
+                    const found = await Ingredient.findOne({ _id: ingredient['id'] });
 
-                    if (found.length === 0) {
+                    if (!found) {
                         res.status(400);
                         res.send("Ingredient ID is invalid");
                         return;

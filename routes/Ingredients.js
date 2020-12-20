@@ -68,18 +68,18 @@ router.post("/api/ingredients", authenticate_1.default, function (req, res) { re
     });
 }); });
 /*
-Get all ingredients by owner's user_id.
+Get all ingredients by user ID.
 */
 router.get("/api/ingredients", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user_id, ingredients, _a;
+    var userId, ingredients, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                user_id = req.body.user_id;
+                userId = req.body.user_id;
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, Ingredient.find({ user_id: user_id })];
+                return [4 /*yield*/, Ingredient.find({ user_id: userId })];
             case 2:
                 ingredients = _b.sent();
                 res.send(ingredients);
@@ -97,18 +97,18 @@ Get a specific ingredient by resource ID.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.get("/api/ingredients/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user_id, ingredient, _a;
+    var userId, ingredient, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                user_id = req.body.user_id;
+                userId = req.body.user_id;
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 3, , 4]);
                 return [4 /*yield*/, Ingredient.findOne({ _id: req.params.id })];
             case 2:
                 ingredient = _b.sent();
-                if (ingredient.user_id === user_id) {
+                if (ingredient.user_id === userId) {
                     res.send(ingredient);
                 }
                 else {
@@ -124,22 +124,22 @@ router.get("/api/ingredients/:id", authenticate_1.default, function (req, res) {
     });
 }); });
 /*
-Update existing resource through resource ID param.
+Update existing ingredient through resource ID param.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.patch("/api/ingredients/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user_id, ingredient, _a;
+    var userId, ingredient, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                user_id = req.body.user_id;
+                userId = req.body.user_id;
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 6, , 7]);
                 return [4 /*yield*/, Ingredient.findOne({ _id: req.params.id })];
             case 2:
                 ingredient = _b.sent();
-                if (!(ingredient.user_id === user_id)) return [3 /*break*/, 4];
+                if (!(ingredient.user_id === userId)) return [3 /*break*/, 4];
                 if (req.body.name) {
                     ingredient.name = req.body.name;
                 }
@@ -171,18 +171,18 @@ Delete specific ingredient, as indicated by resource ID param.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
 router.delete("/api/ingredients/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user_id, ingredient, _a, _b;
+    var userId, ingredient, _a, _b;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
-                user_id = req.body.user_id;
+                userId = req.body.user_id;
                 _c.label = 1;
             case 1:
                 _c.trys.push([1, 9, , 10]);
                 return [4 /*yield*/, Ingredient.findOne({ _id: req.params.id })];
             case 2:
                 ingredient = _c.sent();
-                if (!(ingredient.user_id === user_id)) return [3 /*break*/, 7];
+                if (!(ingredient.user_id === userId)) return [3 /*break*/, 7];
                 _c.label = 3;
             case 3:
                 _c.trys.push([3, 5, , 6]);

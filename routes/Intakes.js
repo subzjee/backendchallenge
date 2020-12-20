@@ -44,14 +44,18 @@ var authenticate_1 = __importDefault(require("../middleware/authenticate"));
 var Intake = require('../models/Intake');
 var Meal = require('../models/Meal');
 var router = express.Router();
+/*
+Create new intake.
+*/
 router.post("/api/intakes", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var found, intake;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, Meal.find({ _id: req.body.meal_id })];
+            case 0: return [4 /*yield*/, Meal.findOne({ _id: req.body.meal_id })];
             case 1:
                 found = _a.sent();
-                if (found.length === 0) {
+                // Check if meal exists.
+                if (!found) {
                     res.status(400);
                     res.send("Meal ID is invalid");
                     return [2 /*return*/];
@@ -66,22 +70,25 @@ router.post("/api/intakes", authenticate_1.default, function (req, res) { return
             case 2:
                 _a.sent();
                 res.status(201);
-                res.location("/api/ingredients/" + intake._id);
+                res.location("/api/intakes/" + intake._id);
                 res.send(intake);
                 return [2 /*return*/];
         }
     });
 }); });
+/*
+Get all intakes by user ID.
+*/
 router.get("/api/intakes", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user_id, intakes, _a;
+    var userId, intakes, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                user_id = req.body.user_id;
+                userId = req.body.user_id;
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, Intake.find({ user_id: user_id })];
+                return [4 /*yield*/, Intake.find({ user_id: userId })];
             case 2:
                 intakes = _b.sent();
                 res.send(intakes);
@@ -94,25 +101,131 @@ router.get("/api/intakes", authenticate_1.default, function (req, res) { return 
         }
     });
 }); });
+/*
+Get a specific intake by resource ID.
+If the resource exists but it isn't owned by the requesting user, it will throw a 403.
+*/
 router.get("/api/intakes/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user_id;
-    return __generator(this, function (_a) {
-        user_id = req.body.user_id;
-        return [2 /*return*/];
+    var userId, intake, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                userId = req.body.user_id;
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, Intake.findOne({ _id: req.params.id })];
+            case 2:
+                intake = _b.sent();
+                if (intake.user_id === userId) {
+                    res.send(intake);
+                }
+                else {
+                    res.sendStatus(403);
+                }
+                return [3 /*break*/, 4];
+            case 3:
+                _a = _b.sent();
+                res.sendStatus(404);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
     });
 }); });
+/*
+Update existing intake through resource ID param.
+If the resource exists but it isn't owned by the requesting user, it will throw a 403.
+*/
 router.patch("/api/intakes/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user_id;
-    return __generator(this, function (_a) {
-        user_id = req.body.user_id;
-        return [2 /*return*/];
+    var userId, intake, found, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                userId = req.body.user_id;
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 8, , 9]);
+                return [4 /*yield*/, Intake.findOne({ _id: req.params.id })];
+            case 2:
+                intake = _b.sent();
+                if (!(intake.user_id === userId)) return [3 /*break*/, 6];
+                if (req.body.time) {
+                    intake.time = req.body.time;
+                }
+                if (!req.body.meal_id) return [3 /*break*/, 4];
+                return [4 /*yield*/, Meal.findOne({ _id: req.body.meal_id })];
+            case 3:
+                found = _b.sent();
+                // Check if meal exists.
+                if (!found) {
+                    res.status(400);
+                    res.send("Meal ID is invalid");
+                    return [2 /*return*/];
+                }
+                intake.meal_id = req.body.meal_id;
+                _b.label = 4;
+            case 4:
+                if (req.body.amount) {
+                    intake.amount = req.body.amount;
+                }
+                return [4 /*yield*/, intake.save()];
+            case 5:
+                _b.sent();
+                res.send(intake);
+                return [3 /*break*/, 7];
+            case 6:
+                res.sendStatus(403);
+                _b.label = 7;
+            case 7: return [3 /*break*/, 9];
+            case 8:
+                _a = _b.sent();
+                res.sendStatus(404);
+                return [3 /*break*/, 9];
+            case 9: return [2 /*return*/];
+        }
     });
 }); });
+/*
+Delete specific intake, as indicated by resource ID param.
+If the resource exists but it isn't owned by the requesting user, it will throw a 403.
+*/
 router.delete("/api/intakes/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user_id;
-    return __generator(this, function (_a) {
-        user_id = req.body.user_id;
-        return [2 /*return*/];
+    var userId, intake, _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                userId = req.body.user_id;
+                _c.label = 1;
+            case 1:
+                _c.trys.push([1, 9, , 10]);
+                return [4 /*yield*/, Intake.findOne({ _id: req.params.id })];
+            case 2:
+                intake = _c.sent();
+                if (!(intake.user_id === userId)) return [3 /*break*/, 7];
+                _c.label = 3;
+            case 3:
+                _c.trys.push([3, 5, , 6]);
+                return [4 /*yield*/, Intake.deleteOne({ _id: req.params.id })];
+            case 4:
+                _c.sent();
+                return [3 /*break*/, 6];
+            case 5:
+                _a = _c.sent();
+                res.sendStatus(404);
+                return [3 /*break*/, 6];
+            case 6:
+                res.sendStatus(204);
+                return [3 /*break*/, 8];
+            case 7:
+                res.sendStatus(403);
+                _c.label = 8;
+            case 8: return [3 /*break*/, 10];
+            case 9:
+                _b = _c.sent();
+                res.sendStatus(404);
+                return [3 /*break*/, 10];
+            case 10: return [2 /*return*/];
+        }
     });
 }); });
 module.exports = router;

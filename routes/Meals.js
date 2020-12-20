@@ -44,6 +44,9 @@ var authenticate_1 = __importDefault(require("../middleware/authenticate"));
 var Meal = require('../models/Meal');
 var Ingredient = require('../models/Ingredient');
 var router = express.Router();
+/*
+Create new meal.
+*/
 router.post("/api/meals", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _i, _a, ingredient, found, meal;
     return __generator(this, function (_b) {
@@ -54,10 +57,10 @@ router.post("/api/meals", authenticate_1.default, function (req, res) { return _
             case 1:
                 if (!(_i < _a.length)) return [3 /*break*/, 4];
                 ingredient = _a[_i];
-                return [4 /*yield*/, Ingredient.find({ _id: ingredient['id'] })];
+                return [4 /*yield*/, Ingredient.findOne({ _id: ingredient['id'] })];
             case 2:
                 found = _b.sent();
-                if (found.length === 0) {
+                if (!found) {
                     res.status(400);
                     res.send("Ingredient ID is invalid");
                     return [2 /*return*/];
@@ -76,22 +79,25 @@ router.post("/api/meals", authenticate_1.default, function (req, res) { return _
             case 5:
                 _b.sent();
                 res.status(201);
-                res.location("/api/ingredients/" + meal._id);
+                res.location("/api/meals/" + meal._id);
                 res.send(meal);
                 return [2 /*return*/];
         }
     });
 }); });
+/*
+Get all meals by user ID.
+*/
 router.get("/api/meals", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user_id, meals, _a;
+    var userId, meals, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                user_id = req.body.user_id;
+                userId = req.body.user_id;
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, Meal.find({ user_id: user_id })];
+                return [4 /*yield*/, Meal.find({ user_id: userId })];
             case 2:
                 meals = _b.sent();
                 res.send(meals);
@@ -104,19 +110,23 @@ router.get("/api/meals", authenticate_1.default, function (req, res) { return __
         }
     });
 }); });
+/*
+Get specific meal by resource ID.
+If the resource exists but it isn't owned by the requesting user, it will throw a 403.
+*/
 router.get("/api/meals/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user_id, meal, _a;
+    var userId, meal, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                user_id = req.body.user_id;
+                userId = req.body.user_id;
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 3, , 4]);
                 return [4 /*yield*/, Meal.findOne({ _id: req.params.id })];
             case 2:
                 meal = _b.sent();
-                if (meal.user_id === user_id) {
+                if (meal.user_id === userId) {
                     res.send(meal);
                 }
                 else {
@@ -131,55 +141,81 @@ router.get("/api/meals/:id", authenticate_1.default, function (req, res) { retur
         }
     });
 }); });
+/*
+Update existing meal through resource ID param.
+If the resource exists but it isn't owned by the requesting user, it will throw a 403.
+*/
 router.patch("/api/meals/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user_id, meal, _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                user_id = req.body.user_id;
-                _b.label = 1;
-            case 1:
-                _b.trys.push([1, 6, , 7]);
-                return [4 /*yield*/, Meal.findOne({ _id: req.params.id })];
-            case 2:
-                meal = _b.sent();
-                if (!(meal.user_id === user_id)) return [3 /*break*/, 4];
-                if (req.body.name) {
-                    meal.name = req.body.name;
-                }
-                if (req.body.ingredients) {
-                    meal.ingredients = req.body.ingredients;
-                }
-                return [4 /*yield*/, meal.save()];
-            case 3:
-                _b.sent();
-                res.send(meal);
-                return [3 /*break*/, 5];
-            case 4:
-                res.sendStatus(403);
-                _b.label = 5;
-            case 5: return [3 /*break*/, 7];
-            case 6:
-                _a = _b.sent();
-                res.sendStatus(404);
-                return [3 /*break*/, 7];
-            case 7: return [2 /*return*/];
-        }
-    });
-}); });
-router.delete("/api/meals/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user_id, meal, _a, _b;
+    var userId, meal, _i, _a, ingredient, found, _b;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
-                user_id = req.body.user_id;
+                userId = req.body.user_id;
+                _c.label = 1;
+            case 1:
+                _c.trys.push([1, 11, , 12]);
+                return [4 /*yield*/, Meal.findOne({ _id: req.params.id })];
+            case 2:
+                meal = _c.sent();
+                if (!(meal.user_id === userId)) return [3 /*break*/, 9];
+                if (req.body.name) {
+                    meal.name = req.body.name;
+                }
+                if (!req.body.ingredients) return [3 /*break*/, 7];
+                _i = 0, _a = req.body.ingredients;
+                _c.label = 3;
+            case 3:
+                if (!(_i < _a.length)) return [3 /*break*/, 6];
+                ingredient = _a[_i];
+                return [4 /*yield*/, Ingredient.findOne({ _id: ingredient['id'] })];
+            case 4:
+                found = _c.sent();
+                if (!found) {
+                    res.status(400);
+                    res.send("Ingredient ID is invalid");
+                    return [2 /*return*/];
+                }
+                _c.label = 5;
+            case 5:
+                _i++;
+                return [3 /*break*/, 3];
+            case 6:
+                meal.ingredients = req.body.ingredients;
+                _c.label = 7;
+            case 7: return [4 /*yield*/, meal.save()];
+            case 8:
+                _c.sent();
+                res.send(meal);
+                return [3 /*break*/, 10];
+            case 9:
+                res.sendStatus(403);
+                _c.label = 10;
+            case 10: return [3 /*break*/, 12];
+            case 11:
+                _b = _c.sent();
+                res.sendStatus(404);
+                return [3 /*break*/, 12];
+            case 12: return [2 /*return*/];
+        }
+    });
+}); });
+/*
+Delete specific meal, as indicated by resource ID param.
+If the resource exists but it isn't owned by the requesting user, it will throw a 403.
+*/
+router.delete("/api/meals/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userId, meal, _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                userId = req.body.user_id;
                 _c.label = 1;
             case 1:
                 _c.trys.push([1, 9, , 10]);
                 return [4 /*yield*/, Meal.findOne({ _id: req.params.id })];
             case 2:
                 meal = _c.sent();
-                if (!(meal.user_id === user_id)) return [3 /*break*/, 7];
+                if (!(meal.user_id === userId)) return [3 /*break*/, 7];
                 _c.label = 3;
             case 3:
                 _c.trys.push([3, 5, , 6]);

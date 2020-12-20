@@ -11,10 +11,10 @@ const router: Router = express.Router();
 Create new intake.
 */
 router.post("/api/intakes", authenticate, async (req: Request, res: Response) => {
-    const found = await Meal.find({_id: req.body.meal_id});
+    const found = await Meal.findOne({_id: req.body.meal_id});
 
     // Check if meal exists.
-    if (found.length === 0) {
+    if (!found) {
         res.status(400);
         res.send("Meal ID is invalid");
         return;
@@ -83,16 +83,16 @@ router.patch("/api/intakes/:id", authenticate, async (req: Request, res: Respons
                 intake.time = req.body.time;
             }
     
-            if (req.body.meal_id) {
-                const found = await Meal.find({_id: req.body.meal_id});
+            if (req.body.meal_id) {                
+                const found = await Meal.findOne({_id: req.body.meal_id});
 
                 // Check if meal exists.
-                if (found.length === 0) {
+                if (!found) {
                     res.status(400);
                     res.send("Meal ID is invalid");
                     return;
                 }
-                
+
                 intake.meal_id = req.body.meal_id;
             }
     
