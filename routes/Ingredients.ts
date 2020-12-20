@@ -19,6 +19,7 @@ router.post("/api/ingredients", authenticate, async (req: Request, res: Response
 
     await ingredient.save();
     res.status(201);
+    res.location(`/api/ingredients/${ingredient._id}`);
     res.send(ingredient);
 })
 
@@ -109,7 +110,6 @@ router.delete("/api/ingredients/:id", authenticate, async (req: Request, res: Re
         } else {
             res.sendStatus(403);
         }
-        res.send(ingredient);
     } catch {
         res.sendStatus(404);
     }

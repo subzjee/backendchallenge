@@ -44,8 +44,23 @@ var authenticate_1 = __importDefault(require("../middleware/authenticate"));
 var Meal = require('../models/Meal');
 var router = express.Router();
 router.post("/api/meals", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var meal;
     return __generator(this, function (_a) {
-        return [2 /*return*/];
+        switch (_a.label) {
+            case 0:
+                meal = new Meal({
+                    name: req.body.name,
+                    ingredients: req.body.ingredients,
+                    user_id: req.body.user.user_id
+                });
+                return [4 /*yield*/, meal.save()];
+            case 1:
+                _a.sent();
+                res.status(201);
+                res.location("/api/ingredients/" + meal._id);
+                res.send(meal);
+                return [2 /*return*/];
+        }
     });
 }); });
 router.get("/api/meals", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
@@ -71,18 +86,106 @@ router.get("/api/meals", authenticate_1.default, function (req, res) { return __
     });
 }); });
 router.get("/api/meals/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/];
+    var _a, username, user_id, meal, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _a = req.body.user, username = _a.username, user_id = _a.user_id;
+                _c.label = 1;
+            case 1:
+                _c.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, Meal.findOne({ _id: req.params.id })];
+            case 2:
+                meal = _c.sent();
+                if (meal.user_id === user_id) {
+                    res.send(meal);
+                }
+                else {
+                    res.sendStatus(403);
+                }
+                return [3 /*break*/, 4];
+            case 3:
+                _b = _c.sent();
+                res.sendStatus(404);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
     });
 }); });
 router.patch("/api/meals/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/];
+    var _a, username, user_id, meal, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _a = req.body.user, username = _a.username, user_id = _a.user_id;
+                console.log("test");
+                _c.label = 1;
+            case 1:
+                _c.trys.push([1, 6, , 7]);
+                return [4 /*yield*/, Meal.findOne({ _id: req.params.id })];
+            case 2:
+                meal = _c.sent();
+                if (!(meal.user_id === user_id)) return [3 /*break*/, 4];
+                if (req.body.name) {
+                    meal.name = req.body.name;
+                }
+                if (req.body.ingredients) {
+                    meal.ingredients = req.body.ingredients;
+                }
+                return [4 /*yield*/, meal.save()];
+            case 3:
+                _c.sent();
+                res.send(meal);
+                return [3 /*break*/, 5];
+            case 4:
+                res.sendStatus(403);
+                _c.label = 5;
+            case 5: return [3 /*break*/, 7];
+            case 6:
+                _b = _c.sent();
+                res.sendStatus(404);
+                return [3 /*break*/, 7];
+            case 7: return [2 /*return*/];
+        }
     });
 }); });
 router.delete("/api/meals/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/];
+    var _a, username, user_id, meal, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
+            case 0:
+                _a = req.body.user, username = _a.username, user_id = _a.user_id;
+                _d.label = 1;
+            case 1:
+                _d.trys.push([1, 9, , 10]);
+                return [4 /*yield*/, Meal.findOne({ _id: req.params.id })];
+            case 2:
+                meal = _d.sent();
+                if (!(meal.user_id === user_id)) return [3 /*break*/, 7];
+                _d.label = 3;
+            case 3:
+                _d.trys.push([3, 5, , 6]);
+                return [4 /*yield*/, Meal.deleteOne({ _id: req.params.id })];
+            case 4:
+                _d.sent();
+                return [3 /*break*/, 6];
+            case 5:
+                _b = _d.sent();
+                res.sendStatus(404);
+                return [3 /*break*/, 6];
+            case 6:
+                res.sendStatus(204);
+                return [3 /*break*/, 8];
+            case 7:
+                res.sendStatus(403);
+                _d.label = 8;
+            case 8: return [3 /*break*/, 10];
+            case 9:
+                _c = _d.sent();
+                res.sendStatus(404);
+                return [3 /*break*/, 10];
+            case 10: return [2 /*return*/];
+        }
     });
 }); });
 module.exports = router;

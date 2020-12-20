@@ -42,6 +42,11 @@ var express = require('express');
 var User = require('../models/User');
 var router = express.Router();
 require('dotenv').config();
+/*
+Verifies if the given username doesn't already exist.
+If it doesn't exist, create new user.
+Otherwise, throw 403.
+*/
 router.post("/api/register", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var password, user_id, user, user_1, _a;
     return __generator(this, function (_b) {
@@ -49,7 +54,7 @@ router.post("/api/register", function (req, res) { return __awaiter(void 0, void
             case 0:
                 password = crypto.createHash('sha512').update(req.body.password).digest('hex');
                 user_id = crypto.createHash('md5').update(req.body.username).digest('hex');
-                return [4 /*yield*/, User.findOne({ username: req.body.username, password: password })];
+                return [4 /*yield*/, User.findOne({ username: req.body.username })];
             case 1:
                 user = _b.sent();
                 if (!user) return [3 /*break*/, 2];
@@ -75,6 +80,10 @@ router.post("/api/register", function (req, res) { return __awaiter(void 0, void
         }
     });
 }); });
+/*
+Verify the provided username and password.
+If valid, generate JWT token and return it.
+*/
 router.get("/api/login", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, username, password, user, generatedToken, _b;
     return __generator(this, function (_c) {
@@ -88,10 +97,15 @@ router.get("/api/login", function (req, res) { return __awaiter(void 0, void 0, 
                 return [4 /*yield*/, User.findOne({ username: username, password: password })];
             case 2:
                 user = _c.sent();
-                generatedToken = jwt.sign({ username: username, user_id: user.user_id }, process.env.JWT_TOKEN_SECRET);
-                res.json({
-                    token: generatedToken
-                });
+                if (user) {
+                    generatedToken = jwt.sign({ username: username, user_id: user.user_id }, process.env.JWT_TOKEN_SECRET);
+                    res.json({
+                        token: generatedToken
+                    });
+                }
+                else {
+                    res.sendStatus(404);
+                }
                 return [3 /*break*/, 4];
             case 3:
                 _b = _c.sent();

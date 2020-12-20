@@ -1,5 +1,5 @@
 const express = require('express');
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 const jwt = require('jsonwebtoken');
 
@@ -13,12 +13,12 @@ interface DecodedToken {
 /*
 Middleware to provide JWT authentication.
 */
-export default function authenticate(req: Request, res: Response, next: any) {
+export default function authenticate(req: Request, res: Response, next: NextFunction) {
     if (req.headers.authorization) {
         const [ prefix, token, ...rest ] = req.headers.authorization.split(' ');
         
         if (prefix === "Bearer") {
-            jwt.verify(token, process.env.JWT_TOKEN_SECRET, (err: any, user: any) => {
+            jwt.verify(token, process.env.JWT_TOKEN_SECRET, (err: any, user: DecodedToken) => {
                 if (err) {
                     return res.sendStatus(403);
                 }

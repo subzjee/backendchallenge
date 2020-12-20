@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 
 const mealIngredientSchema = mongoose.Schema({
     name: {
-        type: Map,
-        of: String,
+        type: String,
         required: true
     },
     amount: {

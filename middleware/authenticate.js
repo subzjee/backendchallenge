@@ -3,6 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express = require('express');
 var jwt = require('jsonwebtoken');
 require('dotenv').config();
+/*
+Middleware to provide JWT authentication.
+*/
 function authenticate(req, res, next) {
     if (req.headers.authorization) {
         var _a = req.headers.authorization.split(' '), prefix = _a[0], token = _a[1], rest = _a.slice(2);

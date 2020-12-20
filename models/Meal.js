@@ -3,8 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose = require('mongoose');
 var mealIngredientSchema = mongoose.Schema({
     name: {
-        type: Map,
-        of: String,
+        type: String,
         required: true
     },
     amount: {

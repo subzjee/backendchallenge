@@ -43,6 +43,9 @@ var express = require('express');
 var authenticate_1 = __importDefault(require("../middleware/authenticate"));
 var Ingredient = require('../models/Ingredient');
 var router = express.Router();
+/*
+Create new ingredient.
+*/
 router.post("/api/ingredients", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var ingredient;
     return __generator(this, function (_a) {
@@ -58,11 +61,15 @@ router.post("/api/ingredients", authenticate_1.default, function (req, res) { re
             case 1:
                 _a.sent();
                 res.status(201);
+                res.location("/api/ingredients/" + ingredient._id);
                 res.send(ingredient);
                 return [2 /*return*/];
         }
     });
 }); });
+/*
+Get all ingredients by owner's user_id.
+*/
 router.get("/api/ingredients", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, username, user_id, ingredients, _b;
     return __generator(this, function (_c) {
@@ -85,6 +92,10 @@ router.get("/api/ingredients", authenticate_1.default, function (req, res) { ret
         }
     });
 }); });
+/*
+Get a specific ingredient by resource ID.
+If the resource exists but it isn't owned by the requesting user, it will throw a 403.
+*/
 router.get("/api/ingredients/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, username, user_id, ingredient, _b;
     return __generator(this, function (_c) {
@@ -94,10 +105,15 @@ router.get("/api/ingredients/:id", authenticate_1.default, function (req, res) {
                 _c.label = 1;
             case 1:
                 _c.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, Ingredient.findOne({ _id: req.params.id, user_id: user_id })];
+                return [4 /*yield*/, Ingredient.findOne({ _id: req.params.id })];
             case 2:
                 ingredient = _c.sent();
-                res.send(ingredient);
+                if (ingredient.user_id === user_id) {
+                    res.send(ingredient);
+                }
+                else {
+                    res.sendStatus(403);
+                }
                 return [3 /*break*/, 4];
             case 3:
                 _b = _c.sent();
@@ -107,6 +123,10 @@ router.get("/api/ingredients/:id", authenticate_1.default, function (req, res) {
         }
     });
 }); });
+/*
+Update existing resource through resource ID param.
+If the resource exists but it isn't owned by the requesting user, it will throw a 403.
+*/
 router.patch("/api/ingredients/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, username, user_id, ingredient, _b;
     return __generator(this, function (_c) {
@@ -146,6 +166,10 @@ router.patch("/api/ingredients/:id", authenticate_1.default, function (req, res)
         }
     });
 }); });
+/*
+Delete specific ingredient, as indicated by resource ID param.
+If the resource exists but it isn't owned by the requesting user, it will throw a 403.
+*/
 router.delete("/api/ingredients/:id", authenticate_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, username, user_id, ingredient, _b, _c;
     return __generator(this, function (_d) {
@@ -176,9 +200,7 @@ router.delete("/api/ingredients/:id", authenticate_1.default, function (req, res
             case 7:
                 res.sendStatus(403);
                 _d.label = 8;
-            case 8:
-                res.send(ingredient);
-                return [3 /*break*/, 10];
+            case 8: return [3 /*break*/, 10];
             case 9:
                 _c = _d.sent();
                 res.sendStatus(404);
