@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 
 const crypto = require('crypto');
 const User = require('../../models/User');
+const HTTPError = require('http-errors');
 
 /*
 Middleware to validate parameters for registration.
@@ -11,7 +12,7 @@ export default async function validateLogin(req: Request,
     const user = await User.findOne({username: req.body.username});
 
     if (!user) {
-        res.status(403).send("Username doesn't exist");
+        next(new HTTPError(403, "Username doesn't exist"));
     } else {
         const password = crypto
                     .createHash('sha512')
@@ -19,6 +20,8 @@ export default async function validateLogin(req: Request,
         if (user.password === password) {
             req.body.user = user;
             next();
+        } else {
+            next(new HTTPError(403, "Wrong password"));
         }
     }
 };

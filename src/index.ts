@@ -1,6 +1,9 @@
 import express = require('express');
 import mongoose = require('mongoose');
 import config from './config';
+import { NextFunction } from 'express';
+import { HttpError } from 'http-errors';
+
 const ingredientRoutes = require('./api/Ingredients');
 const authRoutes = require('./api/Auth');
 const mealRoutes = require('./api/Meals');
@@ -13,6 +16,12 @@ app.use(express.json());
 
 // Import routes into router.
 app.use("/", authRoutes, ingredientRoutes, mealRoutes, intakeRoutes);
+
+// Handle any potential HTTP errors.
+app.use((err: HttpError, req: express.Request, res: express.Response, _next: NextFunction) => {
+        res.status(err.status).send(err.message);
+    }
+);
 
 config.dbUrl = config.dbUrl ?? "";
 

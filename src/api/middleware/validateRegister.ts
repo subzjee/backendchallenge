@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 const User = require('../../models/User');
+const HTTPError = require('http-errors');
 
 /*
 Middleware to validate parameters for registration.
@@ -10,7 +11,7 @@ export default async function validateRegister(req: Request,
     const user = await User.findOne({username: req.body.username});
 
     if (user) {
-        res.status(403).send("Username already exists");
+        next(new HTTPError(403, "Username already exists"));
     } else {
         next();
     }

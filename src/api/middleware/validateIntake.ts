@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { nextTick } from 'process';
 
+const HTTPError = require('http-errors');
 const Meal = require('../../models/Meal');
 
 /*
@@ -8,13 +8,12 @@ Validate that the provided meal ID is a valid resource ID.
 
 - Has to exist in the database.
 */
-async function assertMealExistsInDb(id: string, res: Response) {
+async function assertMealExistsInDb(id: string) {
     try {
         const found = await Meal.findOne({_id: id});
 
         // Check if meal exists.
         if (!found) {
-            res.status(400).send("Meal ID is invalid");
             return false;
         }
     
@@ -29,9 +28,8 @@ async function assertMealExistsInDb(id: string, res: Response) {
 /*
 Validate that the given amount of positive.
 */
-function assertPositiveAmount(amount: Number, res: Response) {
+function assertPositiveAmount(amount: Number) {
     if (amount <= 0) {
-        res.status(400).send("Amount has to be positive");
         return false;
     }
 
@@ -42,10 +40,9 @@ function assertPositiveAmount(amount: Number, res: Response) {
 Compares given time in milliseconds to current time.
 Returns true if given time is in the past or now.
 */
-function assertTimeNotInFuture(datetime: Number, res: Response) {
+function assertTimeNotInFuture(datetime: Number) {
     const now = new Date().getTime();
     if (datetime > now) {
-        res.status(400).send("Time can't be in the future");
         return false;
     } else {
         return true;
@@ -53,45 +50,24 @@ function assertTimeNotInFuture(datetime: Number, res: Response) {
 }
 
 /*
-Middleware to validate GET parameters for Intake.
+Middleware to validate PUT/PATCH parameters for Intake.
 */
-export async function validatePost(req: Request,
-                                   res: Response, next: NextFunction) {
-    if (assertPositiveAmount(req.body.amount, res)
-            && assertTimeNotInFuture(req.body.time, res)
-            && await assertMealExistsInDb(req.body.meal_id, res)) {
-        next();
-    } else {
-        res.sendStatus(400);
-    }
-
-};
-
-/*
-Middleware to validate PATCH parameters for Intake.
-*/
-export async function validatePatch(req: Request,
+export async function validateParams(req: Request,
                                     res: Response, next: NextFunction) {
 
-    let validAmount: boolean = true;
-    let validMealId: boolean = true;
-    let validTime: boolean = true;
+    const { amount, meal_id, time } = req.body;
 
-    if (req.body.amount) {
-        validAmount = assertPositiveAmount(req.body.amount, res);
+    if (amount && !assertPositiveAmount(amount)) {
+        return next(new HTTPError(400, "Invalid amount"));
     }
 
-    if (req.body.meal_id) {
-        validMealId = await assertMealExistsInDb(req.body.meal_id, res);
+    if (meal_id && !assertMealExistsInDb(meal_id)) {
+        return next(new HTTPError(400, `No meal found with ID ${meal_id}`));
     }
 
-    if (req.body.time) {
-        validTime = assertTimeNotInFuture(req.body.time, res);
+    if (time && !assertTimeNotInFuture(time)) {
+        return next(new HTTPError(400, "Invalid time"));
     }
 
-    if (validAmount && validMealId && validTime) {
-        next();
-    } else {
-        res.sendStatus(400);
-    }
+    next();
 };

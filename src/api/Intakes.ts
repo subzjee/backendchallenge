@@ -2,7 +2,7 @@ const express = require('express');
 import { Request, Response, Router } from 'express';
 import { Document, Model, Schema } from 'mongoose';
 import authenticate from './middleware/authenticate';
-import { validatePatch, validatePost } from './middleware/validateIntake';
+import { validateParams } from './middleware/validateIntake';
 
 const Intake = require('../models/Intake');
 const Meal = require('../models/Meal');
@@ -12,7 +12,7 @@ const router: Router = express.Router();
 /*
 Create new intake.
 */
-router.post("/api/intakes", authenticate, validatePost, async (req: Request, res: Response) => {
+router.post("/api/intakes", authenticate, validateParams, async (req: Request, res: Response) => {
     const intake: Document = new Intake({
         dateTime: req.body.time,
         meal_id: req.body.meal_id,
@@ -61,7 +61,7 @@ router.get("/api/intakes/:id", authenticate, async (req: Request, res: Response)
 Update existing intake through resource ID param.
 If the resource exists but it isn't owned by the requesting user, it will throw a 403.
 */
-router.patch("/api/intakes/:id", authenticate, validatePatch, async (req: Request, res: Response) => {
+router.patch("/api/intakes/:id", authenticate, validateParams, async (req: Request, res: Response) => {
     const userId: string = req.body.user_id;
 
     try {

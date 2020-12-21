@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const HTTPError = require('http-errors');
 
 import config from '../../config';
 import { Request, Response, NextFunction } from 'express';
@@ -15,7 +16,7 @@ export default function authenticate(req: Request,
         if (prefix === 'Bearer') {
             jwt.verify(token, config.jwtToken, (err: any, user: IDecodedToken) => {
                 if (err) {
-                    return res.sendStatus(403);
+                    next(new HTTPError(403));
                 }
 
                 req.body.user_id = user.user_id;
@@ -23,6 +24,6 @@ export default function authenticate(req: Request,
             });
         }
     } else {
-        res.sendStatus(401);
+        next(new HTTPError(401));
     }
 };
