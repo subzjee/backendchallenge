@@ -1,14 +1,30 @@
 const mongoose = require('mongoose');
 
+import { userExists } from './utils';
+
+const Meal = require('./Meal');
+
 const intakeSchema = mongoose.Schema({
     dateTime: {
-        type: String,
+        type: Number,
         required: true,
-        // validate: ["NOT IN FUTURE"]
+        validate: {
+            validator: (val: Number) => {
+                const now = new Date().getTime();
+                return (val <= now)
+            },
+            msg: 'Time can not be in future'
+        }
     },
     meal_id: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: async (val: string) => {
+                return await Meal.findOne({_id: val});
+            },
+            msg: 'Meal does not exist'
+        }
     },
     amount: {
         type: Number,
@@ -18,7 +34,7 @@ const intakeSchema = mongoose.Schema({
     user_id: {
         type: String,
         required: true,
-        // validate: ["USER EXISTS"]
+        validate: [userExists, 'User does not exist']
     }
 })
 
