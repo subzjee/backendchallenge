@@ -8,11 +8,7 @@ Validate the amount of calories.
 - Has to be positive
 */
 function assertCaloriesPositive(calories: Number) {
-    if (calories <= 0) {
-        return false;
-    }
-
-    return true;
+    return (calories >= 0);
 }
 
 /*
@@ -45,8 +41,8 @@ export async function validateParams(req: Request,
 
     const { calories, nutritional_vals } = req.body;
 
-    if (calories && !assertCaloriesPositive(calories)) {
-        next(new HTTPError(400, "Calories must be positive"));
+    if ((calories !== undefined) && !assertCaloriesPositive(calories)) {
+        next(new HTTPError(400, "Calories can not be negative"));
     }
 
     if (nutritional_vals && !assertNutritionalValuesValid(nutritional_vals)) {

@@ -29,7 +29,7 @@ const ingredientSchema = mongoose.Schema({
     calories: {
         type: Number,
         required: true,
-        min: [1, 'Too low amount of calories']
+        min: [0, 'Too low amount of calories']
     },
     user_id: {
         type: String,
