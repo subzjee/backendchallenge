@@ -69,7 +69,7 @@ router.patch("/api/intakes/:id", authenticate, validateParams, async (req: Reque
 
         if (intake.user_id === userId) {
             if (req.body.time) {
-                intake.time = req.body.time;
+                intake.dateTime = req.body.time;
             }
     
             if (req.body.meal_id) {                

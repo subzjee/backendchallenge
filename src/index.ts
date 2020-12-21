@@ -18,7 +18,7 @@ app.use(express.json());
 app.use("/", authRoutes, ingredientRoutes, mealRoutes, intakeRoutes);
 
 // Handle any potential HTTP errors.
-app.use((err: HttpError, req: express.Request, res: express.Response, _next: NextFunction) => {
+app.use((err: HttpError, req: express.Request, res: express.Response, next: NextFunction) => {
         res.status(err.status).send(err.message);
     }
 );

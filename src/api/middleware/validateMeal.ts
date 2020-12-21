@@ -10,10 +10,10 @@ Validate that the provided ingredient ID is a valid resource ID.
 
 - Has to exist in the database.
 */
-async function assertIngredientExistsInDb(ingredients: Array<IIngredient>) {
+async function assertIngredientExistsInDb(ingredients: Array<IIngredient>, user_id: string) {
     // Go through ingredients and check if they exist in database.
     for (const ingredient of ingredients) {
-        const found = await Ingredient.findOne({ _id: ingredient['id'] });
+        const found = await Ingredient.findOne({ _id: ingredient['id'], user_id: user_id });
 
         if (!found) {
             return false;
@@ -41,7 +41,7 @@ function assertIngredientsAmountPositive(ingredients: Array<IIngredient>) {
 Validate that there is at least one ingredient.
 */
 function assertIngredients(ingredients: Array<IIngredient>) {
-    return (ingredients.length <= 0);
+    return (ingredients.length > 0);
 }
 
 /*
@@ -50,18 +50,18 @@ Middleware to validate PUT/PATCH parameters for Meal.
 export async function validateParams(req: Request,
                                     res: Response, next: NextFunction) {
 
-    const { ingredients } = req.body;
+    const { ingredients, user_id } = req.body;
 
     if (ingredients && !assertIngredients(ingredients)) {
-        return next(new HTTPError(400, "A meal needs a positive number of ingredients"));
+        next(new HTTPError(400, "A meal needs a positive number of ingredients"));
     }
 
-    if (ingredients && !assertIngredientExistsInDb(ingredients)) {
-        return next(new HTTPError(400, `One or more ingredients don't exist in DB`));
+    if (ingredients && !(await assertIngredientExistsInDb(ingredients, user_id))) {
+        next(new HTTPError(404, `Invalid ingredient ID`));
     }
 
     if (ingredients && !assertIngredientsAmountPositive(ingredients)) {
-        return next(new HTTPError(400, "The amount of ingredient can only be positive. "));
+        next(new HTTPError(400, "The amount of ingredient can only be positive"));
     }
 
     next();

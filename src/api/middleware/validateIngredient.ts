@@ -46,11 +46,11 @@ export async function validateParams(req: Request,
     const { calories, nutritional_vals } = req.body;
 
     if (calories && !assertCaloriesPositive(calories)) {
-        return next(new HTTPError(400, "Calories must be positive"));
+        next(new HTTPError(400, "Calories must be positive"));
     }
 
     if (nutritional_vals && !assertNutritionalValuesValid(nutritional_vals)) {
-        return next(new HTTPError(400, `Invalid format for nutritional values`));
+        next(new HTTPError(400, `Invalid format for nutritional values`));
     }
 
     next();
