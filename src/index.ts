@@ -23,8 +23,6 @@ app.use((err: HttpError, req: express.Request, res: express.Response, next: Next
     }
 );
 
-config.dbUrl = config.dbUrl ?? "";
-
 // Connect to database and start server if connection is successful.
 mongoose
     .connect(config.dbUrl,
